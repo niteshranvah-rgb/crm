@@ -1,0 +1,1855 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>21 Knots CRM</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #0B1C2C;
+  --navy2: #122236;
+  --navy3: #1A3045;
+  --steel: #2E4A62;
+  --horizon: #3D6B8E;
+  --sky: #5B9EC9;
+  --foam: #A8D4F0;
+  --pale: #E8F4FC;
+  --white: #F7FBFE;
+  --gold: #C9973A;
+  --gold2: #E5B85A;
+  --amber: #F5D08A;
+  --rust: #C0442A;
+  --rust2: #E05A3A;
+  --green: #2A7A4B;
+  --green2: #3DA066;
+  --mint: #A8E6C5;
+  --muted: #6B8FA8;
+  --muted2: #8AAFC8;
+  --border: rgba(91,158,201,0.18);
+  --border2: rgba(91,158,201,0.32);
+  --text: #E8F4FC;
+  --text2: #8AAFC8;
+  --text3: #4E7A96;
+  --card: rgba(26,48,69,0.7);
+  --card2: rgba(17,34,54,0.85);
+  --radius: 10px;
+  --radius2: 6px;
+  --shadow: 0 4px 24px rgba(0,0,0,0.35);
+}
+
+/* LOGIN SCREEN */
+.login-screen {
+  position: fixed; inset: 0; z-index: 999;
+  background: var(--navy);
+  display: flex; align-items: center; justify-content: center;
+  flex-direction: column; gap: 0;
+}
+.login-box {
+  background: var(--navy2); border: 1px solid var(--border2);
+  border-radius: 14px; padding: 36px 40px; width: 360px;
+  box-shadow: var(--shadow); text-align: center;
+}
+.login-logo { margin-bottom: 6px; }
+.login-logo span { font-family: 'DM Serif Display'; font-size: 26px; color: var(--foam); letter-spacing: 0.02em; }
+.login-logo p { font-size: 10px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.12em; margin-top: 3px; }
+.login-tagline { font-size: 12px; color: var(--text3); margin-bottom: 28px; }
+.login-field { width: 100%; margin-bottom: 12px; }
+.login-field input {
+  width: 100%; background: var(--navy3); border: 1px solid var(--border);
+  color: var(--text); border-radius: var(--radius2);
+  padding: 10px 14px; font-size: 14px; font-family: 'DM Sans';
+  text-align: center; letter-spacing: 0.1em;
+}
+.login-field input:focus { outline: none; border-color: var(--sky); }
+.login-btn {
+  width: 100%; background: var(--horizon); border: 1px solid var(--sky);
+  color: var(--white); border-radius: var(--radius2);
+  padding: 10px; font-size: 14px; font-family: 'DM Sans'; font-weight: 500;
+  cursor: pointer; margin-top: 4px; transition: background 0.15s;
+}
+.login-btn:hover { background: var(--sky); }
+.login-error { color: var(--rust2); font-size: 12px; margin-top: 8px; min-height: 18px; }
+.login-footer { font-size: 10px; color: var(--text3); margin-top: 20px; }
+
+/* SYNC PANEL */
+.sync-panel {
+  background: var(--navy2); border: 1px solid var(--border2);
+  border-radius: 14px; padding: 28px 32px; width: 500px;
+  box-shadow: var(--shadow); margin-top: 16px;
+}
+.sync-panel h3 { font-family: 'DM Serif Display'; font-size: 18px; color: var(--foam); margin-bottom: 6px; }
+.sync-panel p { font-size: 12px; color: var(--text3); margin-bottom: 20px; line-height: 1.6; }
+.sync-field { margin-bottom: 12px; }
+.sync-field label { display: block; font-size: 10px; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 5px; }
+.sync-field input { width: 100%; background: var(--navy3); border: 1px solid var(--border); color: var(--text); border-radius: var(--radius2); padding: 8px 12px; font-size: 12px; font-family: 'DM Sans'; }
+.sync-field input:focus { outline: none; border-color: var(--sky); }
+.sync-status { font-size: 12px; padding: 8px 12px; border-radius: var(--radius2); margin-top: 10px; display: none; line-height: 1.5; }
+.sync-status.info { background: rgba(91,158,201,0.1); color: var(--sky); border: 1px solid rgba(91,158,201,0.2); display: block; }
+.sync-status.success { background: rgba(42,122,75,0.1); color: var(--green2); border: 1px solid rgba(42,122,75,0.2); display: block; }
+.sync-status.error { background: rgba(192,68,42,0.1); color: var(--rust2); border: 1px solid rgba(192,68,42,0.2); display: block; }
+.email-review-item { padding: 10px 14px; border-bottom: 1px solid var(--border); display: flex; gap: 10px; align-items: flex-start; }
+.email-review-item:last-child { border-bottom: none; }
+.email-review-check { width: 16px; height: 16px; border: 1px solid var(--border2); border-radius: 3px; cursor: pointer; flex-shrink: 0; margin-top: 2px; display: flex; align-items: center; justify-content: center; background: rgba(91,158,201,0.1); }
+.email-review-check.checked { background: var(--horizon); border-color: var(--sky); }
+.email-review-info { flex: 1; min-width: 0; }
+.email-review-from { font-size: 12px; font-weight: 500; color: var(--foam); }
+.email-review-subject { font-size: 11px; color: var(--text2); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.email-review-ai { font-size: 10px; color: var(--gold2); margin-top: 3px; }
+.email-review-time { font-size: 10px; color: var(--text3); white-space: nowrap; flex-shrink: 0; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--navy);
+  color: var(--text);
+  min-height: 100vh;
+  font-size: 13px;
+  line-height: 1.5;
+}
+h1,h2,h3,h4 { font-family: 'DM Serif Display', serif; font-weight: 400; }
+
+/* LAYOUT */
+.shell { display: flex; height: 100vh; overflow: hidden; }
+.sidebar {
+  width: 210px; flex-shrink: 0;
+  background: var(--navy2);
+  border-right: 1px solid var(--border);
+  display: flex; flex-direction: column;
+  padding: 0;
+}
+.sidebar-brand {
+  padding: 20px 18px 18px;
+  border-bottom: 1px solid var(--border);
+}
+.sidebar-brand h1 { font-size: 17px; color: var(--foam); letter-spacing: 0.01em; }
+.sidebar-brand p { font-size: 10px; color: var(--text3); margin-top: 2px; text-transform: uppercase; letter-spacing: 0.1em; }
+.nav { padding: 12px 0; flex: 1; overflow-y: auto; }
+.nav-section { padding: 10px 18px 4px; font-size: 9px; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: 0.12em; }
+.nav-item {
+  display: flex; align-items: center; gap: 9px;
+  padding: 8px 18px; cursor: pointer;
+  color: var(--text2); font-size: 12.5px; font-weight: 400;
+  border-left: 2px solid transparent;
+  transition: all 0.15s;
+}
+.nav-item:hover { color: var(--foam); background: rgba(91,158,201,0.07); }
+.nav-item.active { color: var(--foam); background: rgba(91,158,201,0.12); border-left-color: var(--sky); font-weight: 500; }
+.nav-item svg { flex-shrink: 0; opacity: 0.7; }
+.nav-item.active svg { opacity: 1; }
+.nav-badge { margin-left: auto; background: var(--rust); color: #fff; border-radius: 10px; font-size: 9px; font-weight: 600; padding: 1px 6px; }
+.nav-badge.gold { background: var(--gold); }
+.sidebar-bottom { padding: 12px 18px; border-top: 1px solid var(--border); }
+.sidebar-bottom p { font-size: 10px; color: var(--text3); }
+
+/* MAIN */
+.main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+.topbar {
+  background: var(--navy2);
+  border-bottom: 1px solid var(--border);
+  padding: 11px 20px;
+  display: flex; align-items: center; gap: 12px;
+}
+.topbar h2 { font-family: 'DM Serif Display'; font-size: 16px; color: var(--foam); flex: 1; }
+.btn {
+  border: 1px solid var(--border2);
+  background: transparent; color: var(--text);
+  border-radius: var(--radius2); padding: 6px 13px; font-size: 12px;
+  cursor: pointer; font-family: 'DM Sans'; font-weight: 500;
+  display: inline-flex; align-items: center; gap: 6px;
+  transition: all 0.15s;
+}
+.btn:hover { background: rgba(91,158,201,0.12); border-color: var(--sky); }
+.btn.primary { background: var(--horizon); border-color: var(--sky); color: var(--white); }
+.btn.primary:hover { background: var(--sky); }
+.btn.gold { background: rgba(201,151,58,0.15); border-color: var(--gold); color: var(--gold2); }
+.btn.gold:hover { background: rgba(201,151,58,0.25); }
+.btn.danger { background: rgba(192,68,42,0.15); border-color: var(--rust); color: var(--rust2); }
+.btn.sm { padding: 4px 9px; font-size: 11px; }
+
+.search-wrap { position: relative; }
+.search-wrap input {
+  background: var(--navy3); border: 1px solid var(--border);
+  color: var(--text); border-radius: var(--radius2);
+  padding: 6px 12px 6px 30px; font-size: 12px; width: 200px;
+  font-family: 'DM Sans';
+}
+.search-wrap input:focus { outline: none; border-color: var(--sky); }
+.search-wrap svg { position: absolute; left: 9px; top: 50%; transform: translateY(-50%); opacity: 0.4; }
+
+/* CONTENT */
+.content { flex: 1; overflow-y: auto; padding: 18px 20px; display: flex; flex-direction: column; gap: 16px; }
+
+/* STATS */
+.stats-row { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; }
+.stat {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 13px 15px;
+}
+.stat-label { font-size: 10px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 5px; }
+.stat-val { font-size: 24px; font-family: 'DM Serif Display'; color: var(--foam); }
+.stat-sub { font-size: 10px; color: var(--text3); margin-top: 2px; }
+.stat-val.gold { color: var(--gold2); }
+.stat-val.green { color: var(--green2); }
+.stat-val.rust { color: var(--rust2); }
+
+/* TABLES */
+.panel {
+  background: var(--card2); border: 1px solid var(--border);
+  border-radius: var(--radius); overflow: hidden;
+}
+.panel-head {
+  padding: 12px 16px; border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 10px;
+}
+.panel-head h3 { font-family: 'DM Serif Display'; font-size: 14px; color: var(--foam); flex: 1; }
+.tabs { display: flex; gap: 3px; }
+.tab {
+  border: 1px solid var(--border); background: transparent;
+  color: var(--text3); border-radius: 5px;
+  padding: 3px 9px; font-size: 11px; cursor: pointer; font-family: 'DM Sans';
+}
+.tab:hover { color: var(--text2); border-color: var(--border2); }
+.tab.active { background: rgba(91,158,201,0.15); color: var(--sky); border-color: var(--sky); font-weight: 500; }
+
+table { width: 100%; border-collapse: collapse; }
+thead th {
+  padding: 8px 12px; font-size: 10px; font-weight: 600;
+  color: var(--text3); text-transform: uppercase; letter-spacing: 0.08em;
+  background: rgba(11,28,44,0.6); text-align: left; border-bottom: 1px solid var(--border);
+}
+tbody tr { border-bottom: 1px solid var(--border); cursor: pointer; transition: background 0.1s; }
+tbody tr:last-child { border-bottom: none; }
+tbody tr:hover { background: rgba(91,158,201,0.07); }
+tbody td { padding: 9px 12px; font-size: 12px; color: var(--text2); }
+tbody td.bold { color: var(--text); font-weight: 500; }
+
+/* BADGES */
+.badge {
+  display: inline-flex; align-items: center;
+  border-radius: 20px; font-size: 10px; font-weight: 600;
+  padding: 2px 8px; text-transform: uppercase; letter-spacing: 0.05em;
+}
+.badge-lead { background: rgba(201,151,58,0.18); color: var(--gold2); border: 1px solid rgba(201,151,58,0.3); }
+.badge-prospect { background: rgba(91,158,201,0.15); color: var(--sky); border: 1px solid rgba(91,158,201,0.3); }
+.badge-client { background: rgba(42,122,75,0.18); color: var(--green2); border: 1px solid rgba(42,122,75,0.3); }
+.badge-inactive { background: rgba(74,100,120,0.18); color: var(--muted2); border: 1px solid rgba(74,100,120,0.3); }
+.badge-urgent { background: rgba(192,68,42,0.18); color: var(--rust2); border: 1px solid rgba(192,68,42,0.3); }
+.badge-sent { background: rgba(91,158,201,0.12); color: var(--sky); border: 1px solid rgba(91,158,201,0.25); }
+.badge-won { background: rgba(42,122,75,0.18); color: var(--green2); border: 1px solid rgba(42,122,75,0.3); }
+.badge-lost { background: rgba(192,68,42,0.12); color: var(--rust2); border: 1px solid rgba(192,68,42,0.25); }
+.badge-followup { background: rgba(245,208,138,0.12); color: var(--amber); border: 1px solid rgba(245,208,138,0.25); }
+
+/* SLA */
+.sla { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; }
+.sla-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+.sla-ok .sla-dot { background: var(--green2); }
+.sla-warn .sla-dot { background: var(--gold2); }
+.sla-over .sla-dot { background: var(--rust2); }
+.sla-ok { color: var(--green2); }
+.sla-warn { color: var(--gold2); }
+.sla-over { color: var(--rust2); }
+
+/* MODAL */
+.modal-bg {
+  display: none; position: fixed; inset: 0;
+  background: rgba(0,0,0,0.6); z-index: 100;
+  align-items: center; justify-content: center;
+}
+.modal-bg.open { display: flex; }
+.modal {
+  background: var(--navy2); border: 1px solid var(--border2);
+  border-radius: 12px; width: 640px; max-height: 88vh;
+  overflow-y: auto; box-shadow: var(--shadow);
+}
+.modal-head {
+  padding: 16px 20px; border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 10px; position: sticky; top: 0;
+  background: var(--navy2); z-index: 1;
+}
+.modal-head h3 { font-family: 'DM Serif Display'; font-size: 16px; color: var(--foam); flex: 1; }
+.modal-body { padding: 20px; display: flex; flex-direction: column; gap: 14px; }
+.modal-footer { padding: 14px 20px; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; gap: 8px; }
+
+/* FORM */
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.form-grid.cols3 { grid-template-columns: 1fr 1fr 1fr; }
+.form-group { display: flex; flex-direction: column; gap: 5px; }
+.form-group.full { grid-column: 1 / -1; }
+label { font-size: 11px; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: 0.06em; }
+input, select, textarea {
+  background: var(--navy3); border: 1px solid var(--border);
+  color: var(--text); border-radius: var(--radius2);
+  padding: 7px 10px; font-size: 12.5px; font-family: 'DM Sans';
+  transition: border-color 0.15s;
+}
+input:focus, select:focus, textarea:focus { outline: none; border-color: var(--sky); }
+select option { background: var(--navy3); }
+textarea { resize: vertical; min-height: 72px; }
+.section-divider {
+  font-size: 10px; font-weight: 600; color: var(--text3);
+  text-transform: uppercase; letter-spacing: 0.1em;
+  padding-bottom: 6px; border-bottom: 1px solid var(--border);
+  grid-column: 1 / -1;
+}
+
+/* DETAIL PANEL */
+.detail-shell { display: grid; grid-template-columns: 1fr 320px; gap: 14px; }
+.detail-left { display: flex; flex-direction: column; gap: 14px; }
+.detail-right { display: flex; flex-direction: column; gap: 14px; }
+.detail-card {
+  background: var(--card2); border: 1px solid var(--border);
+  border-radius: var(--radius); overflow: hidden;
+}
+.detail-card-head {
+  padding: 10px 14px; border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 8px;
+}
+.detail-card-head h4 { font-size: 12px; font-weight: 600; color: var(--foam); flex: 1; text-transform: uppercase; letter-spacing: 0.06em; }
+.detail-card-body { padding: 14px; }
+.kv-grid { display: grid; grid-template-columns: 100px 1fr; gap: 6px 10px; }
+.kv-label { font-size: 11px; color: var(--text3); }
+.kv-value { font-size: 12px; color: var(--text); }
+.tag-list { display: flex; flex-wrap: wrap; gap: 5px; }
+.tag {
+  background: rgba(91,158,201,0.1); border: 1px solid rgba(91,158,201,0.2);
+  color: var(--sky); border-radius: 4px; padding: 2px 8px; font-size: 11px;
+}
+.tag.vessel { background: rgba(201,151,58,0.1); border-color: rgba(201,151,58,0.25); color: var(--gold2); }
+.tag.service { background: rgba(42,122,75,0.1); border-color: rgba(42,122,75,0.25); color: var(--green2); }
+.timeline { display: flex; flex-direction: column; gap: 0; }
+.tl-item { display: flex; gap: 10px; padding-bottom: 12px; position: relative; }
+.tl-item:not(:last-child)::before { content: ''; position: absolute; left: 11px; top: 22px; bottom: 0; width: 1px; background: var(--border); }
+.tl-dot { width: 22px; height: 22px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 9px; margin-top: 1px; }
+.tl-dot.email { background: rgba(91,158,201,0.2); color: var(--sky); border: 1px solid rgba(91,158,201,0.3); }
+.tl-dot.note { background: rgba(201,151,58,0.2); color: var(--gold2); border: 1px solid rgba(201,151,58,0.3); }
+.tl-dot.proposal { background: rgba(42,122,75,0.2); color: var(--green2); border: 1px solid rgba(42,122,75,0.3); }
+.tl-dot.followup { background: rgba(245,208,138,0.15); color: var(--amber); border: 1px solid rgba(245,208,138,0.25); }
+.tl-content { flex: 1; }
+.tl-title { font-size: 12px; font-weight: 500; color: var(--text); }
+.tl-meta { font-size: 10px; color: var(--text3); margin-top: 1px; }
+.tl-body { font-size: 11px; color: var(--text2); margin-top: 4px; line-height: 1.45; }
+.pipeline-bar { display: flex; gap: 3px; margin-bottom: 10px; }
+.pipe-step {
+  flex: 1; height: 4px; border-radius: 2px;
+  background: var(--navy3);
+  transition: background 0.2s;
+}
+.pipe-step.done { background: var(--sky); }
+.pipe-step.current { background: var(--gold2); }
+.followup-item { display: flex; align-items: center; gap: 8px; padding: 7px 0; border-bottom: 1px solid var(--border); }
+.followup-item:last-child { border-bottom: none; }
+.followup-check { width: 15px; height: 15px; border: 1px solid var(--border2); border-radius: 3px; cursor: pointer; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+.followup-check.done { background: var(--green); border-color: var(--green2); }
+.followup-text { flex: 1; font-size: 12px; color: var(--text2); }
+.followup-date { font-size: 10px; color: var(--text3); }
+.followup-date.overdue { color: var(--rust2); }
+.mailer-item { padding: 9px 0; border-bottom: 1px solid var(--border); }
+.mailer-item:last-child { border-bottom: none; }
+.mailer-title { font-size: 12px; font-weight: 500; color: var(--text); }
+.mailer-meta { font-size: 10px; color: var(--text3); margin-top: 2px; }
+.mailer-stats { display: flex; gap: 10px; margin-top: 5px; }
+.mailer-stat { font-size: 10px; color: var(--sky); }
+.empty { padding: 24px; text-align: center; color: var(--text3); font-size: 12px; }
+
+/* CONTACTS */
+.contact-card {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 10px 0; border-bottom: 1px solid var(--border);
+}
+.contact-card:last-child { border-bottom: none; }
+.contact-info { flex: 1; }
+.contact-name { font-size: 13px; font-weight: 500; color: var(--foam); }
+.contact-role { font-size: 11px; color: var(--text3); margin-top: 1px; }
+.contact-detail { font-size: 11px; color: var(--text2); margin-top: 3px; }
+.contact-detail a { color: var(--sky); text-decoration: none; }
+.primary-badge { font-size: 9px; font-weight: 600; background: rgba(91,158,201,0.15); color: var(--sky); border: 1px solid rgba(91,158,201,0.3); border-radius: 10px; padding: 1px 7px; text-transform: uppercase; letter-spacing: 0.05em; }
+.contact-actions { display: flex; gap: 5px; align-items: center; }
+
+.avatar-initials {
+  width: 36px; height: 36px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 600; flex-shrink: 0;
+}
+
+/* TOAST */
+.toast {
+  position: fixed; bottom: 20px; right: 20px;
+  background: var(--navy2); border: 1px solid var(--border2);
+  border-radius: var(--radius); padding: 10px 16px;
+  font-size: 12px; color: var(--foam); box-shadow: var(--shadow);
+  display: none; z-index: 200; animation: slideUp 0.2s;
+}
+.toast.show { display: block; }
+@keyframes slideUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+</style>
+</head>
+<body>
+<div class="shell" id="appShell">
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <div class="sidebar-brand">
+    <h1>21 Knots</h1>
+    <p>Client & Enquiry CRM</p>
+  </div>
+  <nav class="nav">
+    <div class="nav-section">Overview</div>
+    <div class="nav-item active" data-view="dashboard" onclick="setView('dashboard',this)">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="1" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.2"/><rect x="8" y="1" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.2"/><rect x="1" y="8" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.2"/><rect x="8" y="8" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.2"/></svg>
+      Dashboard
+    </div>
+    <div class="nav-section">Clients</div>
+    <div class="nav-item" data-view="leads" onclick="setView('leads',this)">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="5" r="3" stroke="currentColor" stroke-width="1.2"/><path d="M2 12c0-2.761 2.239-5 5-5s5 2.239 5 5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+      Leads & Clients
+      <span class="nav-badge gold" id="nb-leads">0</span>
+    </div>
+    <div class="nav-item" data-view="enquiries" onclick="setView('enquiries',this)">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="2" width="12" height="9" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M1 5l6 3.5L13 5" stroke="currentColor" stroke-width="1.2"/></svg>
+      Enquiries
+      <span class="nav-badge" id="nb-enq">0</span>
+    </div>
+    <div class="nav-item" data-view="pipeline" onclick="setView('pipeline',this)">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7h10M2 3h6M2 11h8" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+      Pipeline
+    </div>
+    <div class="nav-section">Engagement</div>
+    <div class="nav-item" data-view="followups" onclick="setView('followups',this)">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="2" y="1" width="10" height="12" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M4 5h6M4 8h4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+      Follow-ups
+      <span class="nav-badge" id="nb-follow">0</span>
+    </div>
+    <div class="nav-item" data-view="mailers" onclick="setView('mailers',this)">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 4l6 4 6-4M1 3h12v8H1V3z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg>
+      Mailers & Comms
+    </div>
+  </nav>
+  <div class="sidebar-bottom">
+    <p id="lastSync">Last sync: never</p>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <h2 id="view-title">Dashboard</h2>
+    <div class="search-wrap">
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="5" cy="5" r="4" stroke="#8AAFC8" stroke-width="1.3"/><path d="M8.5 8.5l2 2" stroke="#8AAFC8" stroke-width="1.3" stroke-linecap="round"/></svg>
+      <input type="text" placeholder="Search clients, enquiries…" oninput="globalSearch(this.value)" id="globalSearch">
+    </div>
+    <button class="btn primary" id="topbar-action" onclick="openAddLead()">+ Add Lead</button>
+    <button class="btn gold" id="syncBtn" title="Sync Outlook inbox with AI">⟳ Sync Inbox</button>
+  </div>
+
+  <div class="content" id="main-content"></div>
+</div>
+
+</div>
+
+<!-- MODAL: Add/Edit Lead -->
+<div class="modal-bg" id="modal-lead">
+<div class="modal">
+  <div class="modal-head">
+    <h3 id="modal-lead-title">Add New Lead</h3>
+    <button class="btn sm" onclick="closeModal('modal-lead')">✕</button>
+  </div>
+  <div class="modal-body">
+    <div class="form-grid">
+      <div class="section-divider">Contact Details</div>
+      <div class="form-group"><label>Company Name *</label><input id="f-company" placeholder="e.g. Pacific Shipping Co."></div>
+      <div class="form-group"><label>Contact Person *</label><input id="f-contact" placeholder="Full name"></div>
+      <div class="form-group"><label>Email</label><input id="f-email" type="email" placeholder="email@company.com"></div>
+      <div class="form-group"><label>Phone</label><input id="f-phone" placeholder="+1 234 567 8900"></div>
+      <div class="form-group"><label>Country / Port</label><input id="f-country" placeholder="e.g. Singapore / PSA"></div>
+      <div class="form-group"><label>Region</label>
+        <select id="f-region">
+          <option value="">Select region</option>
+          <option>Southeast Asia</option><option>Middle East / Gulf</option>
+          <option>Europe</option><option>Americas</option>
+          <option>East Africa</option><option>West Africa</option>
+          <option>South Asia</option><option>Far East</option><option>Other</option>
+        </select>
+      </div>
+      <div class="section-divider">Fleet Profile</div>
+      <div class="form-group full"><label>Vessel / Asset Types (comma-separated)</label><input id="f-vessels" placeholder="e.g. FPSO, Jack-up, PSV, Bulk Carrier, Offshore Wind, LNG Carrier"></div>
+      <div class="form-group"><label>Fleet Size</label><input id="f-fleet" placeholder="e.g. 12 vessels"></div>
+      <div class="form-group"><label>Flag State</label><input id="f-flag" placeholder="e.g. Panama, Marshall Islands"></div>
+      <div class="section-divider">Services & Status</div>
+      <div class="form-group full"><label>Services Interested In</label>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:4px;" id="services-check">
+          <!-- dynamically generated -->
+        </div>
+      </div>
+      <div class="form-group"><label>Client Status</label>
+        <select id="f-status">
+          <option value="lead">Lead</option>
+          <option value="prospect">Prospect</option>
+          <option value="client">Client</option>
+          <option value="inactive">Inactive</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Lead Source</label>
+        <select id="f-source">
+          <option value="">Select source</option>
+          <option>Email Enquiry</option><option>Referral</option>
+          <option>Trade Show</option><option>Cold Outreach</option><option>Website</option><option>Existing Contact</option>
+        </select>
+      </div>
+      <div class="form-group full"><label>Notes</label><textarea id="f-notes" placeholder="Any relevant details about this client…"></textarea></div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button class="btn" onclick="closeModal('modal-lead')">Cancel</button>
+    <button class="btn primary" onclick="saveLead()">Save Lead</button>
+  </div>
+</div>
+</div>
+
+<!-- MODAL: Add Enquiry -->
+<div class="modal-bg" id="modal-enq">
+<div class="modal">
+  <div class="modal-head">
+    <h3>New Enquiry</h3>
+    <button class="btn sm" onclick="closeModal('modal-enq')">✕</button>
+  </div>
+  <div class="modal-body">
+    <div class="form-grid">
+      <div class="form-group"><label>Client / Lead *</label>
+        <select id="eq-client"></select>
+      </div>
+      <div class="form-group"><label>Enquiry Date</label><input id="eq-date" type="date"></div>
+      <div class="form-group full"><label>Subject / Vessel Name</label><input id="eq-subject" placeholder="e.g. Dry-dock quotation for MV Pacific Star"></div>
+      <div class="form-group"><label>Service Required</label>
+        <select id="eq-service">
+          <option value="">Select…</option>
+          <optgroup label="Design & Engineering">
+            <option>Ship Design – Concept</option>
+            <option>Ship Design – Basic</option>
+            <option>Ship Design – Production</option>
+            <option>Conversion Design</option>
+            <option>Naval Architecture</option>
+            <option>Structural Design</option>
+            <option>Machinery & Piping Design</option>
+            <option>Electrical Design</option>
+            <option>Offshore Engineering Design</option>
+            <option>Oil & Gas Engineering</option>
+            <option>Software Solutions</option>
+            <option>Advanced Engineering</option>
+          </optgroup>
+          <optgroup label="Offshore">
+            <option>Fixed Platform & Floaters</option>
+            <option>Transportation & Installation</option>
+            <option>SubSea Engineering</option>
+            <option>Decommissioning</option>
+            <option>Renewable Energy Engineering</option>
+            <option>Inspection & Surveys</option>
+          </optgroup>
+          <optgroup label="Power & Industrial">
+            <option>Power Engineering</option>
+            <option>Ports & Harbour</option>
+            <option>Shipyard Engineering</option>
+          </optgroup>
+          <option>Other / Multiple Services</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Priority</label>
+        <select id="eq-priority">
+          <option value="normal">Normal</option>
+          <option value="high">High</option>
+          <option value="urgent">Urgent</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Est. Value (USD)</label><input id="eq-value" type="number" placeholder="0"></div>
+      <div class="form-group"><label>Stage</label>
+        <select id="eq-stage">
+          <option value="new">New Enquiry</option>
+          <option value="working">Working on It</option>
+          <option value="proposal">Proposal Sent</option>
+          <option value="negotiation">Negotiation</option>
+          <option value="won">Won</option>
+          <option value="lost">Lost</option>
+        </select>
+      </div>
+      <div class="form-group full"><label>Details</label><textarea id="eq-details" placeholder="Describe the enquiry…"></textarea></div>
+      <div class="form-group"><label>Follow-up Date</label><input id="eq-followup" type="date"></div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button class="btn" onclick="closeModal('modal-enq')">Cancel</button>
+    <button class="btn primary" onclick="saveEnquiry()">Save Enquiry</button>
+  </div>
+</div>
+</div>
+
+<!-- MODAL: Add Note -->
+<div class="modal-bg" id="modal-note">
+<div class="modal" style="width:480px">
+  <div class="modal-head">
+    <h3>Add Note / Meeting</h3>
+    <button class="btn sm" onclick="closeModal('modal-note')">✕</button>
+  </div>
+  <div class="modal-body">
+    <div class="form-grid">
+      <div class="form-group"><label>Type</label>
+        <select id="note-type">
+          <option value="note">Note</option>
+          <option value="meeting">Meeting</option>
+          <option value="call">Call</option>
+          <option value="email">Email</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Date</label><input id="note-date" type="date"></div>
+      <div class="form-group full"><label>Summary</label><textarea id="note-text" placeholder="What was discussed, agreed, or noted…"></textarea></div>
+      <div class="form-group"><label>Follow-up needed by</label><input id="note-followup" type="date"></div>
+      <div class="form-group"><label>Follow-up action</label><input id="note-action" placeholder="e.g. Send revised quote"></div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button class="btn" onclick="closeModal('modal-note')">Cancel</button>
+    <button class="btn primary" onclick="saveNote()">Save Note</button>
+  </div>
+</div>
+</div>
+
+<!-- MODAL: Mailer -->
+<div class="modal-bg" id="modal-mailer">
+<div class="modal">
+  <div class="modal-head">
+    <h3>Create Mailer / Circular</h3>
+    <button class="btn sm" onclick="closeModal('modal-mailer')">✕</button>
+  </div>
+  <div class="modal-body">
+    <div class="form-grid">
+      <div class="form-group full"><label>Subject</label><input id="ml-subject" placeholder="e.g. Q1 2025 Dry Dock Slot Availability"></div>
+      <div class="form-group"><label>Audience</label>
+        <select id="ml-audience">
+          <option>All Clients & Prospects</option>
+          <option>Active Clients Only</option>
+          <option>Prospects Only</option>
+          <option>By Region – Southeast Asia</option>
+          <option>By Region – Middle East / Gulf</option>
+          <option>By Region – South Asia</option>
+          <option>By Region – Europe</option>
+          <option>By Service – Ship Design</option>
+          <option>By Service – Offshore Engineering</option>
+          <option>By Service – Renewable Energy</option>
+          <option>By Service – Decommissioning</option>
+          <option>Custom List</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Schedule</label><input id="ml-date" type="date"></div>
+      <div class="form-group full"><label>Message Body</label><textarea id="ml-body" style="min-height:120px" placeholder="Dear [Name],\n\nWe are pleased to inform you…"></textarea></div>
+      <div class="form-group full"><label>Notes / Internal Ref</label><input id="ml-ref" placeholder="e.g. Q1 newsletter, post-dry-dock promo"></div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button class="btn" onclick="closeModal('modal-mailer')">Cancel</button>
+    <button class="btn gold" onclick="saveMailer()">Schedule Mailer</button>
+  </div>
+</div>
+</div>
+
+</div><!-- end appShell -->
+
+<!-- MODAL: Add/Edit Contact -->
+<div class="modal-bg" id="modal-contact">
+<div class="modal" style="width:520px">
+  <div class="modal-head">
+    <h3 id="modal-contact-title">Add Contact</h3>
+    <button class="btn sm" onclick="closeModal('modal-contact')">✕</button>
+  </div>
+  <div class="modal-body">
+    <div class="form-grid">
+      <div class="form-group"><label>Full Name *</label><input id="ct-name" placeholder="e.g. James Wilson"></div>
+      <div class="form-group"><label>Job Title / Role</label><input id="ct-role" placeholder="e.g. Fleet Manager"></div>
+      <div class="form-group"><label>Department</label>
+        <select id="ct-dept">
+          <option value="">Select…</option>
+          <option>Management</option><option>Operations</option><option>Technical</option>
+          <option>Finance</option><option>Manning</option><option>Commercial</option>
+          <option>Legal</option><option>Other</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Email</label><input id="ct-email" type="email" placeholder="email@company.com"></div>
+      <div class="form-group"><label>Phone</label><input id="ct-phone" placeholder="+1 234 567 8900"></div>
+      <div class="form-group"><label>Primary Contact?</label>
+        <select id="ct-primary">
+          <option value="false">No</option>
+          <option value="true">Yes — set as primary</option>
+        </select>
+      </div>
+      <div class="form-group full"><label>Notes</label><textarea id="ct-notes" placeholder="Anything to remember about this person…"></textarea></div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button class="btn" onclick="closeModal('modal-contact')">Cancel</button>
+    <button class="btn primary" onclick="saveContact()">Save Contact</button>
+  </div>
+</div>
+</div>
+
+<!-- MODAL: Sync Inbox -->
+<div class="modal-bg" id="modal-sync">
+<div class="modal" style="width:580px">
+  <div class="modal-head">
+    <h3>⟳ Sync Outlook Inbox</h3>
+    <button class="btn sm" onclick="closeModal('modal-sync')">✕</button>
+  </div>
+  <div class="modal-body">
+
+    <!-- SETUP SECTION -->
+    <div id="sync-setup">
+      <div style="font-size:12px;color:var(--text2);line-height:1.6;margin-bottom:16px">
+        Click <strong style="color:var(--foam)">Connect Outlook</strong> to sign in with your Microsoft account. A popup will appear — sign in and grant access. Your credentials are never stored.
+      </div>
+      <div class="form-grid">
+        <div class="form-group"><label>Application (Client) ID</label><input id="cfg-client" placeholder="1c4378b7-e4e6-46ea-b336-acbacdc2c27b"></div>
+        <div class="form-group"><label>Tenant ID</label><input id="cfg-tenant" placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"></div>
+        <div class="form-group full"><label>Anthropic API Key (for AI classification)</label><input id="cfg-apikey" type="password" placeholder="sk-ant-..."></div>
+        <div class="form-group"><label>Emails to fetch</label>
+          <select id="cfg-count">
+            <option value="20">Last 20 emails</option>
+            <option value="50" selected>Last 50 emails</option>
+            <option value="100">Last 100 emails</option>
+          </select>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:8px">
+        <button class="btn primary" onclick="saveConfigAndSync()">Connect Outlook & Sync</button>
+        <button class="btn" onclick="closeModal('modal-sync')">Cancel</button>
+      </div>
+      <div class="sync-status" id="sync-status"></div>
+    </div>
+
+    <!-- REVIEW SECTION -->
+    <div id="sync-review" style="display:none">
+      <div style="font-size:12px;color:var(--text2);margin-bottom:12px">
+        AI has reviewed your emails and identified these as potential enquiries.
+        <strong style="color:var(--foam)">Tick the ones you want to add to your pipeline</strong> then click Import.
+      </div>
+      <div id="sync-email-list" style="max-height:340px;overflow-y:auto;border:1px solid var(--border);border-radius:var(--radius)"></div>
+      <div style="display:flex;gap:8px;margin-top:12px;align-items:center">
+        <button class="btn primary" onclick="importSelected()">Import Selected to CRM</button>
+        <button class="btn" onclick="resetSync()">← Back</button>
+        <span style="font-size:11px;color:var(--text3);margin-left:auto" id="sync-count-label"></span>
+      </div>
+    </div>
+
+  </div>
+</div>
+</div>
+
+<div class="toast" id="toast"></div>
+<script>
+// ─── LOGIN (defined first so button always works) ──────────────────────────────
+const PASSWORDS = ['21knots2025','knots@sg','knots@in','knots@ae'];
+function doLogin() {
+  try {
+    const pass = document.getElementById('loginPass').value.trim();
+    const err = document.getElementById('loginError');
+    if(PASSWORDS.indexOf(pass) !== -1) {
+      document.getElementById('loginScreen').style.display = 'none';
+      document.getElementById('appShell').style.display = 'flex';
+      render();
+    } else {
+      if(err) err.textContent = 'Wrong password. Try: 21knots2025';
+      document.getElementById('loginPass').value = '';
+      setTimeout(function(){ if(err) err.textContent = ''; }, 4000);
+    }
+  } catch(e) { alert('Login error: ' + e.message); }
+}
+
+// ─── DATA STORE ───────────────────────────────────────────────────────────────
+const SERVICES = [
+  // Design & Engineering
+  'Ship Design – Concept','Ship Design – Basic','Ship Design – Production','Conversion Design',
+  'Naval Architecture','Structural Design','Machinery & Piping Design','Electrical Design',
+  'Offshore Engineering Design','Oil & Gas Engineering','Software Solutions','Advanced Engineering',
+  // Offshore
+  'Fixed Platform & Floaters','Transportation & Installation','SubSea Engineering',
+  'Decommissioning','Renewable Energy Engineering','Inspection & Surveys',
+  // Power & Industrial
+  'Power Engineering','Ports & Harbour','Shipyard Engineering'
+];
+const PIPE_STAGES = ['New','Working','Proposal','Negotiation','Won','Lost'];
+const STAGE_MAP = {new:0,working:1,proposal:2,negotiation:3,won:4,lost:5};
+
+let db = JSON.parse(localStorage.getItem('seacrm') || 'null') || {
+  leads: [
+    {id:1,company:'Sembcorp Marine',contact:'Tan Wei Liang',email:'tw.liang@sembmarine.sg',phone:'+65 6265 1111',country:'Singapore',region:'Southeast Asia',vessels:'FPSO, Drillship, Semi-submersible',fleet:'Major shipyard',flag:'Singapore Registry',services:['Ship Design – Production','Structural Design','Machinery & Piping Design'],status:'client',source:'Referral',notes:'Key shipyard client in Singapore. Production design work ongoing. Decision maker is TWL.',created:'2023-06-15'},
+    {id:2,company:'ONGC – Offshore',contact:'Rajesh Nair',email:'r.nair@ongc.co.in',phone:'+91 98201 12345',country:'Mumbai, India',region:'South Asia',vessels:'Jack-up, Fixed Platform, FPSO',fleet:'State oil company',flag:'Indian Registry',services:['Fixed Platform & Floaters','Structural Design','Inspection & Surveys'],status:'client',source:'Trade Show',notes:'Met at OTC Houston 2023. Ongoing platform inspection contracts. Budget cycle is April.',created:'2023-09-01'},
+    {id:3,company:'Vestas Offshore Wind',contact:'Lars Bjornsson',email:'l.bjornsson@vestas.com',phone:'+45 9730 0000',country:'Aarhus, Denmark',region:'Europe',vessels:'Offshore Wind Foundation, SOV',fleet:'Wind energy major',flag:'Danish',services:['Renewable Energy Engineering','Transportation & Installation'],status:'prospect',source:'Email Enquiry',notes:'Evaluating T&I engineering support for North Sea wind project. Decision Q1 2025.',created:'2024-03-20'},
+    {id:4,company:'ADNOC Offshore',contact:'Khalid Al Mansoori',email:'k.mansoori@adnoc.ae',phone:'+971 2 606 0000',country:'Abu Dhabi, UAE',region:'Middle East / Gulf',vessels:'Fixed Platform, FPSO, Subsea',fleet:'National oil company',flag:'UAE',services:['Oil & Gas Engineering','SubSea Engineering','Decommissioning'],status:'prospect',source:'Cold Outreach',notes:'Initial contact via UAE office. Large decommissioning programme coming up 2025-2026.',created:'2024-05-10'},
+    {id:5,company:'Jurong Shipyard',contact:'David Lim',email:'d.lim@jsyard.com.sg',phone:'+65 6265 0500',country:'Singapore',region:'Southeast Asia',vessels:'VLCC, Drillship, Offshore Vessel',fleet:'Major shipyard',flag:'Singapore Registry',services:['Ship Design – Basic','Conversion Design','Naval Architecture'],status:'lead',source:'Email Enquiry',notes:'Conversion design enquiry for 2 x VLCC to FSO. Urgent timeline.',created:'2024-08-12'},
+  ],
+  enquiries: [
+    {id:1,leadId:1,subject:'Production design – 2 x PSV newbuild',service:'Ship Design – Production',priority:'high',value:280000,stage:'proposal',details:'Full production design package for 2 platform supply vessels. Drawings required for Singapore class approval.',date:'2024-09-15',followup:'2024-11-10',created:'2024-09-15'},
+    {id:2,leadId:2,subject:'Structural assessment – WHP-B platform',service:'Structural Design',priority:'urgent',value:95000,stage:'negotiation',details:'Structural integrity assessment for ageing wellhead platform. Client needs report within 6 weeks.',date:'2024-10-08',followup:'2024-10-28',created:'2024-10-08'},
+    {id:3,leadId:3,subject:'T&I engineering – Hornsea 3 foundations',service:'Transportation & Installation',priority:'normal',value:420000,stage:'new',details:'Marine warranty and T&I engineering for jacket foundations. North Sea project.',date:'2024-10-14',followup:'2024-11-05',created:'2024-10-14'},
+    {id:4,leadId:5,subject:'Conversion design – VLCC to FSO',service:'Conversion Design',priority:'urgent',value:180000,stage:'working',details:'Two VLCCs to be converted to FSO for West Africa deployment. Concept and basic design required first.',date:'2024-10-18',followup:'2024-10-28',created:'2024-10-18'},
+    {id:5,leadId:4,subject:'Decommissioning study – 4 platforms',service:'Decommissioning',priority:'normal',value:320000,stage:'new',details:'Pre-FEED decommissioning study for 4 ageing platforms in Abu Dhabi. Multi-year programme.',date:'2024-10-20',followup:'2024-11-08',created:'2024-10-20'},
+  ],
+  notes: [
+    {id:1,leadId:1,type:'meeting',date:'2024-10-02',text:'Met TWL and his design team in Singapore. Confirmed scope for 2 PSVs. Client wants weekly drawing updates. Milestone schedule to be shared.',followup:'2024-10-18',action:'Send milestone schedule and revised fee proposal',done:false},
+    {id:2,leadId:2,type:'call',date:'2024-10-10',text:'Call with Rajesh. Platform inspection window confirmed for December. He wants structural FEA included in scope.',followup:'2024-10-28',action:'Revise proposal to include FEA scope and cost',done:false},
+    {id:3,leadId:5,type:'email',date:'2024-10-19',text:'Received formal RFQ by email from David Lim. Two VLCCs, want concept design first then basic. Timeline very tight – 8 months to delivery.',followup:'2024-10-28',action:'Prepare concept design proposal, highlight 21 Knots VLCC conversion experience',done:false},
+  ],
+  mailers: [
+    {id:1,subject:'21 Knots – Q4 2024 Capabilities Update',audience:'All Clients',date:'2024-10-01',body:'Dear [Name], We are pleased to share our latest project portfolio and expanded capabilities in offshore and renewable engineering...',ref:'Q4 capabilities mailer',sent:38,opened:27},
+    {id:2,subject:'Decommissioning Services – New Offering',audience:'Prospects Only',date:'2024-10-12',body:'Dear [Name], As the offshore industry moves into a new phase, 21 Knots has expanded its decommissioning engineering capabilities...',ref:'Decom launch campaign',sent:22,opened:15},
+  ],
+  contacts: [
+    {id:1,leadId:1,name:'Tan Wei Liang',role:'VP Engineering',dept:'Technical',email:'tw.liang@sembmarine.sg',phone:'+65 6265 1111',primary:true,notes:'Main decision maker. Prefers email. Very responsive.'},
+    {id:2,leadId:1,name:'James Ong',role:'Design Manager',dept:'Technical',email:'j.ong@sembmarine.sg',phone:'+65 9123 4567',primary:false,notes:'Day-to-day design coordination contact.'},
+    {id:3,leadId:1,name:'Clara Tay',role:'Contracts Manager',dept:'Commercial',email:'c.tay@sembmarine.sg',phone:'+65 9234 5678',primary:false,notes:'Handles PO issuance and invoicing queries.'},
+    {id:4,leadId:2,name:'Rajesh Nair',role:'Head – Offshore Structures',dept:'Technical',email:'r.nair@ongc.co.in',phone:'+91 98201 12345',primary:true,notes:'Senior contact. Approves technical scope.'},
+    {id:5,leadId:2,name:'Priya Sharma',role:'Project Manager',dept:'Operations',email:'p.sharma@ongc.co.in',phone:'+91 98765 11111',primary:false,notes:'Day-to-day project coordination.'},
+    {id:6,leadId:3,name:'Lars Bjornsson',role:'Engineering Director',dept:'Technical',email:'l.bjornsson@vestas.com',phone:'+45 9730 0000',primary:true,notes:'Key contact. Very technical. Wants detailed methodology.'},
+    {id:7,leadId:4,name:'Khalid Al Mansoori',role:'Senior Engineer',dept:'Technical',email:'k.mansoori@adnoc.ae',phone:'+971 2 606 0000',primary:true,notes:'Initial contact via UAE office intro.'},
+    {id:8,leadId:5,name:'David Lim',role:'Technical Director',dept:'Technical',email:'d.lim@jsyard.com.sg',phone:'+65 6265 0500',primary:true,notes:'Urgent conversion enquiry. Fast decision maker.'},
+  ],
+  nextId: {lead:6,enq:6,note:4,mailer:3,contact:9}
+};
+
+function save() { localStorage.setItem('seacrm', JSON.stringify(db)); updateBadges(); }
+
+// ─── UTILITIES ────────────────────────────────────────────────────────────────
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 2500);
+}
+function initials(name) { return (name||'?').split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2); }
+function avatarColor(name) {
+  const cols = [['#185FA5','#0C3B6E'],['#0F6E56','#08422F'],['#993C1D','#5C2210'],['#854F0B','#503006'],['#3B6D11','#223F08'],['#993556','#601F35']];
+  return cols[(name||'').charCodeAt(0)%cols.length];
+}
+function fmtDate(d) { if(!d) return '—'; const dt = new Date(d); return dt.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'}); }
+function daysUntil(d) { if(!d) return null; return Math.ceil((new Date(d)-new Date())/(1000*60*60*24)); }
+function badgeStatus(s) {
+  const m={lead:'badge-lead',prospect:'badge-prospect',client:'badge-client',inactive:'badge-inactive'};
+  return `<span class="badge ${m[s]||'badge-lead'}">${s}</span>`;
+}
+function badgeStage(s) {
+  const m={new:'badge-sent',working:'badge-followup',proposal:'badge-sent',negotiation:'badge-followup',won:'badge-won',lost:'badge-lost'};
+  return `<span class="badge ${m[s]||'badge-sent'}">${s}</span>`;
+}
+function badgePriority(p) {
+  if(p==='urgent') return '<span class="badge badge-urgent">Urgent</span>';
+  if(p==='high') return '<span class="badge badge-lead">High</span>';
+  return '';
+}
+function slaFor(enq) {
+  if(enq.stage==='won') return '<span class="sla sla-ok"><span class="sla-dot"></span>Won</span>';
+  if(enq.stage==='lost') return '<span class="sla" style="color:var(--muted2)"><span class="sla-dot" style="background:var(--muted2)"></span>Lost</span>';
+  if(!enq.followup) return '<span class="sla" style="color:var(--muted2)">—</span>';
+  const d = daysUntil(enq.followup);
+  if(d < 0) return `<span class="sla sla-over"><span class="sla-dot"></span>Overdue ${Math.abs(d)}d</span>`;
+  if(d <= 3) return `<span class="sla sla-warn"><span class="sla-dot"></span>Due in ${d}d</span>`;
+  return `<span class="sla sla-ok"><span class="sla-dot"></span>On track</span>`;
+}
+function leadName(id) { const l=db.leads.find(x=>x.id==id); return l?l.company:'Unknown'; }
+
+function updateBadges() {
+  document.getElementById('nb-leads').textContent = db.leads.filter(l=>l.status==='lead'||l.status==='prospect').length;
+  const openEnq = db.enquiries.filter(e=>e.stage!=='won'&&e.stage!=='lost').length;
+  document.getElementById('nb-enq').textContent = openEnq;
+  const dueFollowups = db.notes.filter(n=>!n.done&&n.followup&&daysUntil(n.followup)<=3).length;
+  document.getElementById('nb-follow').textContent = dueFollowups;
+}
+
+// ─── VIEWS ────────────────────────────────────────────────────────────────────
+let currentView = 'dashboard';
+let selectedLeadId = null;
+function setView(v,el) {
+  currentView = v;
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  if(el) el.classList.add('active');
+  const titles = {dashboard:'Dashboard',leads:'Leads & Clients',enquiries:'Enquiries',pipeline:'Pipeline',followups:'Follow-ups',mailers:'Mailers & Comms'};
+  document.getElementById('view-title').textContent = titles[v]||v;
+  const actions = {dashboard:'+ Add Lead',leads:'+ Add Lead',enquiries:'+ New Enquiry',pipeline:'+ New Enquiry',followups:'+ Add Note',mailers:'+ New Mailer'};
+  const actionFns = {dashboard:'openAddLead()',leads:'openAddLead()',enquiries:'openAddEnquiry()',pipeline:'openAddEnquiry()',followups:'openAddNote(null)',mailers:'openMailer()'};
+  document.getElementById('topbar-action').textContent = actions[v]||'+ Add';
+  document.getElementById('topbar-action').setAttribute('onclick', actionFns[v]||'openAddLead()');
+  render();
+}
+
+function render() {
+  const c = document.getElementById('main-content');
+  if(currentView==='dashboard') c.innerHTML = renderDashboard();
+  else if(currentView==='leads') c.innerHTML = renderLeads();
+  else if(currentView==='enquiries') c.innerHTML = renderEnquiries();
+  else if(currentView==='pipeline') c.innerHTML = renderPipeline();
+  else if(currentView==='followups') c.innerHTML = renderFollowups();
+  else if(currentView==='mailers') c.innerHTML = renderMailers();
+  updateBadges();
+}
+
+// DASHBOARD
+function renderDashboard() {
+  const totalLeads = db.leads.length;
+  const clients = db.leads.filter(l=>l.status==='client').length;
+  const openEnq = db.enquiries.filter(e=>e.stage!=='won'&&e.stage!=='lost').length;
+  const pipeValue = db.enquiries.filter(e=>e.stage!=='lost').reduce((a,b)=>a+(b.value||0),0);
+  const overdueEnq = db.enquiries.filter(e=>e.stage!=='won'&&e.stage!=='lost'&&e.followup&&daysUntil(e.followup)<0).length;
+  const dueNotes = db.notes.filter(n=>!n.done&&n.followup&&daysUntil(n.followup)<=3).length;
+
+  const recentEnq = [...db.enquiries].sort((a,b)=>new Date(b.date)-new Date(a.date)).slice(0,5);
+  const dueFup = db.notes.filter(n=>!n.done&&n.followup).sort((a,b)=>new Date(a.followup)-new Date(b.followup)).slice(0,5);
+
+  return `
+  <div class="stats-row">
+    <div class="stat"><div class="stat-label">Total Accounts</div><div class="stat-val">${totalLeads}</div><div class="stat-sub">${clients} active clients</div></div>
+    <div class="stat"><div class="stat-label">Open Enquiries</div><div class="stat-val gold">${openEnq}</div><div class="stat-sub">${overdueEnq} overdue</div></div>
+    <div class="stat"><div class="stat-label">Pipeline Value</div><div class="stat-val green">$${(pipeValue/1000).toFixed(0)}k</div><div class="stat-sub">Active deals</div></div>
+    <div class="stat"><div class="stat-label">Follow-ups Due</div><div class="stat-val ${dueNotes>0?'rust':''}">${dueNotes}</div><div class="stat-sub">Next 3 days</div></div>
+    <div class="stat"><div class="stat-label">Won (all time)</div><div class="stat-val green">${db.enquiries.filter(e=>e.stage==='won').length}</div><div class="stat-sub">Closed deals</div></div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+    <div class="panel">
+      <div class="panel-head"><h3>Recent Enquiries</h3><button class="btn sm" onclick="setView('enquiries',document.querySelector('[data-view=enquiries]'))">View all</button></div>
+      <table><thead><tr><th>Client</th><th>Subject</th><th>Stage</th><th>SLA</th></tr></thead><tbody>
+      ${recentEnq.map(e=>`<tr onclick="setView('enquiries',document.querySelector('[data-view=enquiries]'))">
+        <td class="bold">${leadName(e.leadId)}</td>
+        <td>${e.subject.slice(0,30)}${e.subject.length>30?'…':''}</td>
+        <td>${badgeStage(e.stage)}</td>
+        <td>${slaFor(e)}</td>
+      </tr>`).join('')}
+      </tbody></table>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><h3>Upcoming Follow-ups</h3><button class="btn sm" onclick="setView('followups',document.querySelector('[data-view=followups]'))">View all</button></div>
+      <table><thead><tr><th>Client</th><th>Action</th><th>Due</th></tr></thead><tbody>
+      ${dueFup.length ? dueFup.map(n=>{
+        const lead = db.leads.find(l=>l.id===n.leadId);
+        const d = daysUntil(n.followup);
+        const cls = d<0?'rust':d<=2?'gold2':'green2';
+        return `<tr onclick="setView('followups',document.querySelector('[data-view=followups]'))">
+          <td class="bold">${lead?lead.company:'Unknown'}</td>
+          <td>${(n.action||n.text).slice(0,35)}…</td>
+          <td style="color:var(--${cls})">${fmtDate(n.followup)}</td>
+        </tr>`;
+      }).join('') : '<tr><td colspan="3" class="empty">No follow-ups due</td></tr>'}
+      </tbody></table>
+    </div>
+  </div>`;
+}
+
+// LEADS
+function renderLeads(filter='') {
+  let list = db.leads;
+  if(filter) list = list.filter(l=>l.company.toLowerCase().includes(filter)||l.contact.toLowerCase().includes(filter)||l.region.toLowerCase().includes(filter));
+  return `
+  <div style="display:flex;gap:8px;margin-bottom:2px">
+    ${['all','lead','prospect','client','inactive'].map(s=>`<button class="tab ${s==='all'&&!filter?'active':''}" onclick="renderLeadsByStatus('${s}')">${s==='all'?'All':s.charAt(0).toUpperCase()+s.slice(1)}</button>`).join('')}
+  </div>
+  <div class="panel">
+    <table>
+      <thead><tr><th>Company</th><th>Contact</th><th>Region</th><th>Fleet</th><th>Services</th><th>Status</th><th>Enquiries</th><th></th></tr></thead>
+      <tbody>
+      ${list.map(l=>{
+        const enqCount = db.enquiries.filter(e=>e.leadId===l.id).length;
+        const ctList = db.contacts.filter(c=>c.leadId===l.id);
+        const primaryCt = ctList.find(c=>c.primary)||ctList[0];
+        const [fg,bg] = avatarColor(l.company);
+        return `<tr onclick="openLeadDetail(${l.id})">
+          <td><div style="display:flex;align-items:center;gap:8px">
+            <div class="avatar-initials" style="width:28px;height:28px;font-size:10px;background:${bg};color:${fg}">${initials(l.company)}</div>
+            <span class="bold">${l.company}</span></div></td>
+          <td>${primaryCt?primaryCt.name+(ctList.length>1?` <span style="color:var(--text3);font-size:10px">+${ctList.length-1}</span>`:''):(l.contact||'—')}</td>
+          <td>${l.region||l.country||'—'}</td>
+          <td>${l.fleet||'—'}</td>
+          <td><div class="tag-list">${(l.services||[]).slice(0,2).map(s=>`<span class="tag service">${s}</span>`).join('')}${(l.services||[]).length>2?`<span class="tag">+${l.services.length-2}</span>`:''}</div></td>
+          <td>${badgeStatus(l.status)}</td>
+          <td style="color:var(--sky)">${enqCount}</td>
+          <td><button class="btn sm" onclick="event.stopPropagation();openEditLead(${l.id})">Edit</button></td>
+        </tr>`;
+      }).join('')}
+      </tbody>
+    </table>
+  </div>`;
+}
+
+function renderLeadsByStatus(s) {
+  const c = document.getElementById('main-content');
+  let list = s==='all' ? db.leads : db.leads.filter(l=>l.status===s);
+  c.innerHTML = `
+  <div style="display:flex;gap:8px;margin-bottom:2px">
+    ${['all','lead','prospect','client','inactive'].map(st=>`<button class="tab ${st===s?'active':''}" onclick="renderLeadsByStatus('${st}')">${st==='all'?'All':st.charAt(0).toUpperCase()+st.slice(1)}</button>`).join('')}
+  </div>
+  <div class="panel">
+    <table>
+      <thead><tr><th>Company</th><th>Primary Contact</th><th>Region</th><th>Fleet</th><th>Services</th><th>Status</th><th>Enquiries</th><th></th></tr></thead>
+      <tbody>
+      ${list.map(l=>{
+        const enqCount = db.enquiries.filter(e=>e.leadId===l.id).length;
+        const ctList = db.contacts.filter(c=>c.leadId===l.id);
+        const primaryCt = ctList.find(c=>c.primary)||ctList[0];
+        const [fg,bg] = avatarColor(l.company);
+        return `<tr onclick="openLeadDetail(${l.id})">
+          <td><div style="display:flex;align-items:center;gap:8px">
+            <div class="avatar-initials" style="width:28px;height:28px;font-size:10px;background:${bg};color:${fg}">${initials(l.company)}</div>
+            <span class="bold">${l.company}</span></div></td>
+          <td>${primaryCt?primaryCt.name+(ctList.length>1?` <span style="color:var(--text3);font-size:10px">+${ctList.length-1}</span>`:''):(l.contact||'—')}</td>
+          <td>${l.region||l.country||'—'}</td>
+          <td>${l.fleet||'—'}</td>
+          <td><div class="tag-list">${(l.services||[]).slice(0,2).map(s=>`<span class="tag service">${s}</span>`).join('')}${(l.services||[]).length>2?`<span class="tag">+${l.services.length-2}</span>`:''}</div></td>
+          <td>${badgeStatus(l.status)}</td>
+          <td style="color:var(--sky)">${enqCount}</td>
+          <td><button class="btn sm" onclick="event.stopPropagation();openEditLead(${l.id})">Edit</button></td>
+        </tr>`;
+      }).join('')}
+      </tbody>
+    </table>
+  </div>`;
+}
+
+// ENQUIRIES
+function renderEnquiries(filter='') {
+  let list = db.enquiries;
+  if(filter) list = list.filter(e=>e.subject.toLowerCase().includes(filter)||leadName(e.leadId).toLowerCase().includes(filter));
+  list = [...list].sort((a,b)=>new Date(b.date)-new Date(a.date));
+  return `
+  <div class="panel">
+    <div class="panel-head">
+      <h3>All Enquiries</h3>
+      <div class="tabs">
+        ${['all','new','working','proposal','negotiation','won','lost'].map(s=>`<button class="tab" onclick="renderEnquiriesByStage('${s}')">${s==='all'?'All':s.charAt(0).toUpperCase()+s.slice(1)}</button>`).join('')}
+      </div>
+    </div>
+    <table>
+      <thead><tr><th>Client</th><th>Subject</th><th>Service</th><th>Value</th><th>Stage</th><th>Priority</th><th>Follow-up</th><th>SLA</th><th></th></tr></thead>
+      <tbody>
+      ${list.map(e=>`<tr onclick="openEnqDetail(${e.id})">
+        <td class="bold">${leadName(e.leadId)}</td>
+        <td>${e.subject}</td>
+        <td>${e.service||'—'}</td>
+        <td style="color:var(--gold2)">${e.value?'$'+e.value.toLocaleString():'—'}</td>
+        <td>${badgeStage(e.stage)}</td>
+        <td>${badgePriority(e.priority)}</td>
+        <td>${fmtDate(e.followup)}</td>
+        <td>${slaFor(e)}</td>
+        <td><button class="btn sm" onclick="event.stopPropagation();openEditEnq(${e.id})">Edit</button></td>
+      </tr>`).join('')}
+      </tbody>
+    </table>
+  </div>`;
+}
+
+function renderEnquiriesByStage(stage) {
+  const c = document.getElementById('main-content');
+  let list = stage==='all' ? db.enquiries : db.enquiries.filter(e=>e.stage===stage);
+  list = [...list].sort((a,b)=>new Date(b.date)-new Date(a.date));
+  c.innerHTML = `
+  <div class="panel">
+    <div class="panel-head">
+      <h3>Enquiries${stage!=='all'?' – '+stage.charAt(0).toUpperCase()+stage.slice(1):''}</h3>
+      <div class="tabs">
+        ${['all','new','working','proposal','negotiation','won','lost'].map(s=>`<button class="tab ${s===stage?'active':''}" onclick="renderEnquiriesByStage('${s}')">${s==='all'?'All':s.charAt(0).toUpperCase()+s.slice(1)}</button>`).join('')}
+      </div>
+    </div>
+    <table>
+      <thead><tr><th>Client</th><th>Subject</th><th>Service</th><th>Value</th><th>Stage</th><th>Priority</th><th>Follow-up</th><th>SLA</th><th></th></tr></thead>
+      <tbody>
+      ${list.map(e=>`<tr onclick="openEnqDetail(${e.id})">
+        <td class="bold">${leadName(e.leadId)}</td>
+        <td>${e.subject}</td>
+        <td>${e.service||'—'}</td>
+        <td style="color:var(--gold2)">${e.value?'$'+e.value.toLocaleString():'—'}</td>
+        <td>${badgeStage(e.stage)}</td>
+        <td>${badgePriority(e.priority)}</td>
+        <td>${fmtDate(e.followup)}</td>
+        <td>${slaFor(e)}</td>
+        <td><button class="btn sm" onclick="event.stopPropagation();openEditEnq(${e.id})">Edit</button></td>
+      </tr>`).join('')}
+      </tbody>
+    </table>
+  </div>`;
+}
+
+// PIPELINE
+function renderPipeline() {
+  const stages = ['new','working','proposal','negotiation','won','lost'];
+  const stageLabels = {new:'New',working:'Working',proposal:'Proposal Sent',negotiation:'Negotiating',won:'Won',lost:'Lost'};
+  const cols = stages.map(s=>{
+    const items = db.enquiries.filter(e=>e.stage===s);
+    const total = items.reduce((a,b)=>a+(b.value||0),0);
+    return `<div style="flex:1;min-width:140px">
+      <div style="font-size:10px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid var(--border)">
+        ${stageLabels[s]} <span style="color:var(--sky)">(${items.length})</span>
+        ${total?`<div style="font-size:10px;color:var(--gold2);margin-top:2px">$${(total/1000).toFixed(0)}k</div>`:''}
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+      ${items.map(e=>{
+        const lead = db.leads.find(l=>l.id===e.leadId);
+        const d = e.followup?daysUntil(e.followup):null;
+        const urgentColor = e.priority==='urgent'?'var(--rust)':e.priority==='high'?'var(--gold)':'var(--border)';
+        return `<div onclick="openEnqDetail(${e.id})" style="background:var(--card2);border:1px solid ${urgentColor};border-radius:8px;padding:10px;cursor:pointer;transition:border-color 0.15s" onmouseover="this.style.borderColor='var(--sky)'" onmouseout="this.style.borderColor='${urgentColor}'">
+          <div style="font-size:11px;font-weight:600;color:var(--foam);margin-bottom:3px">${lead?lead.company:'?'}</div>
+          <div style="font-size:11px;color:var(--text2);margin-bottom:6px;line-height:1.35">${e.subject.slice(0,45)}${e.subject.length>45?'…':''}</div>
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <span style="font-size:11px;color:var(--gold2)">${e.value?'$'+e.value.toLocaleString():''}</span>
+            ${d!==null?`<span style="font-size:10px;color:${d<0?'var(--rust2)':d<=3?'var(--gold2)':'var(--text3)'}">${d<0?'Overdue':d+'d'}</span>`:''}
+          </div>
+          ${e.priority==='urgent'?'<div style="margin-top:4px"><span class="badge badge-urgent" style="font-size:9px">urgent</span></div>':''}
+        </div>`;
+      }).join('')}
+      </div>
+    </div>`;
+  });
+  const pipeVal = db.enquiries.filter(e=>e.stage!=='lost').reduce((a,b)=>a+(b.value||0),0);
+  return `
+  <div class="stats-row" style="grid-template-columns:repeat(3,minmax(0,1fr))">
+    <div class="stat"><div class="stat-label">Active Pipeline</div><div class="stat-val green">$${(pipeVal/1000).toFixed(0)}k</div></div>
+    <div class="stat"><div class="stat-label">Open Deals</div><div class="stat-val gold">${db.enquiries.filter(e=>e.stage!=='won'&&e.stage!=='lost').length}</div></div>
+    <div class="stat"><div class="stat-label">Won This Year</div><div class="stat-val">${db.enquiries.filter(e=>e.stage==='won').length}</div></div>
+  </div>
+  <div class="panel" style="overflow:visible">
+    <div class="panel-head"><h3>Kanban Pipeline</h3></div>
+    <div style="display:flex;gap:10px;padding:14px;overflow-x:auto;min-height:300px">${cols.join('')}</div>
+  </div>`;
+}
+
+// FOLLOWUPS
+function renderFollowups() {
+  const all = db.notes.filter(n=>n.followup).sort((a,b)=>new Date(a.followup)-new Date(b.followup));
+  const overdue = all.filter(n=>!n.done&&daysUntil(n.followup)<0);
+  const due = all.filter(n=>!n.done&&daysUntil(n.followup)>=0&&daysUntil(n.followup)<=7);
+  const upcoming = all.filter(n=>!n.done&&daysUntil(n.followup)>7);
+  const done = all.filter(n=>n.done);
+  const renderGroup = (title,items,color)=>{
+    if(!items.length) return '';
+    return `<div class="panel">
+      <div class="panel-head"><h3 style="color:var(--${color})">${title} (${items.length})</h3></div>
+      <div style="padding:0 14px">
+      ${items.map(n=>{
+        const lead = db.leads.find(l=>l.id===n.leadId);
+        const typeIcon = {note:'N',meeting:'M',call:'C',email:'E'}[n.type]||'N';
+        const d = daysUntil(n.followup);
+        return `<div class="followup-item">
+          <div class="followup-check ${n.done?'done':''}" onclick="toggleNote(${n.id})">
+            ${n.done?'<svg width="9" height="9" viewBox="0 0 9 9"><path d="M1.5 4.5l2.5 2.5 4-4" stroke="#fff" stroke-width="1.3" fill="none" stroke-linecap="round"/></svg>':''}
+          </div>
+          <div class="tl-dot ${n.type==='email'?'email':n.type==='meeting'?'proposal':n.type==='call'?'note':'followup'}" style="width:20px;height:20px;font-size:9px">${typeIcon}</div>
+          <div style="flex:1">
+            <div style="font-size:12px;font-weight:500;color:var(--foam)">${lead?lead.company:'Unknown'}</div>
+            <div style="font-size:11px;color:var(--text2)">${n.action||n.text.slice(0,60)}</div>
+          </div>
+          <span class="followup-date ${d!==null&&d<0?'overdue':''}">${fmtDate(n.followup)}</span>
+        </div>`;
+      }).join('')}
+      </div>
+    </div>`;
+  };
+  return renderGroup('Overdue',overdue,'rust2')+renderGroup('Due this week',due,'gold2')+renderGroup('Upcoming',upcoming,'sky')+renderGroup('Completed',done,'text3');
+}
+
+// MAILERS
+function renderMailers() {
+  return `
+  <div class="panel">
+    <div class="panel-head"><h3>Mailers & Circulars</h3></div>
+    <div style="padding:0 16px">
+    ${db.mailers.map(m=>`<div class="mailer-item">
+      <div style="display:flex;align-items:center;gap:10px">
+        <div style="flex:1">
+          <div class="mailer-title">${m.subject}</div>
+          <div class="mailer-meta">To: ${m.audience} · Scheduled: ${fmtDate(m.date)}</div>
+        </div>
+        <span class="badge badge-sent">Sent</span>
+      </div>
+      <div class="mailer-stats">
+        <span class="mailer-stat">📤 ${m.sent} sent</span>
+        <span class="mailer-stat">👁 ${m.opened} opened</span>
+        <span class="mailer-stat" style="color:var(--green2)">Rate: ${Math.round(m.opened/m.sent*100)}%</span>
+      </div>
+    </div>`).join('')}
+    </div>
+  </div>
+  <div class="panel" style="padding:16px">
+    <h3 style="font-family:'DM Serif Display';font-size:14px;color:var(--foam);margin-bottom:12px">Quick Templates</h3>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+    ${[
+      {t:'New Capabilities – Offshore Engineering',d:'Share latest offshore & subsea capabilities'},
+      {t:'Decommissioning Programme – 2025',d:'Reach oil & gas clients about decom services'},
+      {t:'Renewable Energy Engineering Offer',d:'Target wind/offshore renewable prospects'},
+      {t:'Year-End Project Review & Greetings',d:'Stay in touch with clients before year end'},
+    ].map(tpl=>`<div style="background:var(--card);border:1px solid var(--border);border-radius:8px;padding:11px;cursor:pointer" onclick="prefillMailer('${tpl.t}')">
+      <div style="font-size:12px;font-weight:500;color:var(--foam)">${tpl.t}</div>
+      <div style="font-size:11px;color:var(--text3);margin-top:3px">${tpl.d}</div>
+    </div>`).join('')}
+    </div>
+  </div>`;
+}
+
+// ─── DETAIL VIEWS ─────────────────────────────────────────────────────────────
+function openLeadDetail(id) {
+  const lead = db.leads.find(l=>l.id===id);
+  if(!lead) return;
+  selectedLeadId = id;
+  const enqs = db.enquiries.filter(e=>e.leadId===id);
+  const notes = db.notes.filter(n=>n.leadId===id);
+  const contacts = db.contacts.filter(c=>c.leadId===id);
+  const [fg,bg] = avatarColor(lead.company);
+  const c = document.getElementById('main-content');
+  c.innerHTML = `
+  <div style="display:flex;align-items:center;gap:10px;margin-bottom:2px">
+    <button class="btn sm" onclick="setView('leads',document.querySelector('[data-view=leads]'))">← Back</button>
+    <div style="flex:1;font-size:12px;color:var(--text3)">${lead.company}</div>
+    <button class="btn sm" onclick="openEditLead(${id})">Edit</button>
+    <button class="btn sm" onclick="openAddContact(${id})">+ Contact</button>
+    <button class="btn sm gold" onclick="openAddNote(${id})">+ Note</button>
+    <button class="btn sm primary" onclick="openAddEnquiry(${id})">+ Enquiry</button>
+  </div>
+  <div class="detail-shell">
+    <div class="detail-left">
+      <div class="detail-card">
+        <div class="detail-card-head">
+          <div class="avatar-initials" style="background:${bg};color:${fg}">${initials(lead.company)}</div>
+          <div style="flex:1">
+            <div style="font-size:15px;font-family:'DM Serif Display';color:var(--foam)">${lead.company}</div>
+            <div style="font-size:11px;color:var(--text3)">${lead.region||''} · ${lead.country||''}</div>
+          </div>
+          ${badgeStatus(lead.status)}
+        </div>
+        <div class="detail-card-body">
+          <div class="kv-grid">
+            <span class="kv-label">Location</span><span class="kv-value">${lead.country||'—'} (${lead.region||'—'})</span>
+            <span class="kv-label">Fleet</span><span class="kv-value">${lead.fleet||'—'} · ${lead.flag||'—'} flag</span>
+            <span class="kv-label">Source</span><span class="kv-value">${lead.source||'—'}</span>
+            <span class="kv-label">Since</span><span class="kv-value">${fmtDate(lead.created)}</span>
+          </div>
+          <div style="margin-top:10px">
+            <div style="font-size:10px;color:var(--text3);margin-bottom:5px;text-transform:uppercase;letter-spacing:0.06em">Vessel Types</div>
+            <div class="tag-list">${(lead.vessels||'').split(',').filter(Boolean).map(v=>`<span class="tag vessel">${v.trim()}</span>`).join('')}</div>
+          </div>
+          <div style="margin-top:10px">
+            <div style="font-size:10px;color:var(--text3);margin-bottom:5px;text-transform:uppercase;letter-spacing:0.06em">Services</div>
+            <div class="tag-list">${(lead.services||[]).map(s=>`<span class="tag service">${s}</span>`).join('')}</div>
+          </div>
+          ${lead.notes?`<div style="margin-top:10px;padding:8px 10px;background:var(--navy3);border-radius:6px;font-size:11px;color:var(--text2);line-height:1.45">${lead.notes}</div>`:''}
+        </div>
+      </div>
+
+      <!-- CONTACTS PANEL -->
+      <div class="detail-card">
+        <div class="detail-card-head">
+          <h4>Contacts (${contacts.length})</h4>
+          <button class="btn sm" onclick="openAddContact(${id})">+ Add</button>
+        </div>
+        <div style="padding:0 14px">
+          ${contacts.length ? contacts.map(ct=>{
+            const [cfg,cbg] = avatarColor(ct.name);
+            return `<div class="contact-card">
+              <div class="avatar-initials" style="width:32px;height:32px;font-size:11px;background:${cbg};color:${cfg};flex-shrink:0">${initials(ct.name)}</div>
+              <div class="contact-info">
+                <div style="display:flex;align-items:center;gap:7px">
+                  <span class="contact-name">${ct.name}</span>
+                  ${ct.primary?'<span class="primary-badge">Primary</span>':''}
+                </div>
+                <div class="contact-role">${[ct.role,ct.dept].filter(Boolean).join(' · ')}</div>
+                <div class="contact-detail">
+                  ${ct.email?`<a href="mailto:${ct.email}">${ct.email}</a>`:''}
+                  ${ct.email&&ct.phone?' · ':''}
+                  ${ct.phone||''}
+                </div>
+                ${ct.notes?`<div style="font-size:10px;color:var(--text3);margin-top:3px">${ct.notes}</div>`:''}
+              </div>
+              <div class="contact-actions">
+                <button class="btn sm" onclick="openEditContact(${ct.id})">Edit</button>
+                <button class="btn sm danger" onclick="deleteContact(${ct.id},${id})">✕</button>
+              </div>
+            </div>`;
+          }).join('') : '<div class="empty">No contacts yet — add one above</div>'}
+        </div>
+      </div>
+
+      <div class="detail-card">
+        <div class="detail-card-head"><h4>Enquiries (${enqs.length})</h4></div>
+        <table>
+          <thead><tr><th>Subject</th><th>Service</th><th>Value</th><th>Stage</th><th>SLA</th></tr></thead>
+          <tbody>
+          ${enqs.length?enqs.map(e=>`<tr onclick="openEnqDetail(${e.id})">
+            <td class="bold">${e.subject}</td><td>${e.service}</td>
+            <td style="color:var(--gold2)">${e.value?'$'+e.value.toLocaleString():'—'}</td>
+            <td>${badgeStage(e.stage)}</td><td>${slaFor(e)}</td>
+          </tr>`).join(''):'<tr><td colspan="5" class="empty">No enquiries yet</td></tr>'}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="detail-right">
+      <div class="detail-card">
+        <div class="detail-card-head"><h4>Timeline & Notes</h4><button class="btn sm" onclick="openAddNote(${id})">+ Add</button></div>
+        <div class="detail-card-body">
+          <div class="timeline">
+          ${notes.length ? notes.sort((a,b)=>new Date(b.date)-new Date(a.date)).map(n=>`
+            <div class="tl-item">
+              <div class="tl-dot ${n.type==='email'?'email':n.type==='meeting'||n.type==='call'?'proposal':'note'}">${n.type==='meeting'?'M':n.type==='call'?'C':n.type==='email'?'E':'N'}</div>
+              <div class="tl-content">
+                <div class="tl-title">${n.type.charAt(0).toUpperCase()+n.type.slice(1)}</div>
+                <div class="tl-meta">${fmtDate(n.date)}</div>
+                <div class="tl-body">${n.text}</div>
+                ${n.action?`<div style="margin-top:4px;font-size:10px;color:var(--gold2)">→ ${n.action}</div>`:''}
+                ${n.followup?`<div style="font-size:10px;color:${daysUntil(n.followup)<0?'var(--rust2)':'var(--text3)'};margin-top:2px">Follow-up: ${fmtDate(n.followup)}</div>`:''}
+              </div>
+            </div>`).join('') : '<div class="empty">No notes yet</div>'}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function openEnqDetail(id) {
+  const enq = db.enquiries.find(e=>e.id===id);
+  if(!enq) return;
+  const lead = db.leads.find(l=>l.id===enq.leadId);
+  const stages = ['new','working','proposal','negotiation','won','lost'];
+  const ci = stages.indexOf(enq.stage);
+  const c = document.getElementById('main-content');
+  c.innerHTML = `
+  <div style="display:flex;align-items:center;gap:10px;margin-bottom:2px">
+    <button class="btn sm" onclick="render()">← Back</button>
+    <div style="flex:1;font-size:12px;color:var(--text3)">${lead?lead.company:'Unknown'} › ${enq.subject.slice(0,40)}</div>
+    <button class="btn sm" onclick="openEditEnq(${id})">Edit</button>
+    ${enq.stage!=='won'&&enq.stage!=='lost'?`<button class="btn sm primary" onclick="markWon(${id})">Mark Won</button><button class="btn sm danger" onclick="markLost(${id})">Mark Lost</button>`:''}
+  </div>
+  <div class="detail-shell">
+    <div class="detail-left">
+      <div class="detail-card">
+        <div class="detail-card-head"><h4>Enquiry Details</h4>${badgePriority(enq.priority)}</div>
+        <div class="detail-card-body">
+          <div style="margin-bottom:12px">
+            <div style="font-size:14px;font-family:'DM Serif Display';color:var(--foam);margin-bottom:4px">${enq.subject}</div>
+            <div class="pipeline-bar">
+              ${stages.map((s,i)=>`<div class="pipe-step ${i<ci?'done':i===ci?'current':''}"></div>`).join('')}
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--text3)">${stages.map((s,i)=>`<span ${i===ci?'style="color:var(--gold2);font-weight:600"':''}>${s}</span>`).join('')}</div>
+          </div>
+          <div class="kv-grid">
+            <span class="kv-label">Client</span><span class="kv-value">${lead?lead.company:'—'}</span>
+            <span class="kv-label">Service</span><span class="kv-value">${enq.service||'—'}</span>
+            <span class="kv-label">Value</span><span class="kv-value" style="color:var(--gold2)">${enq.value?'$'+enq.value.toLocaleString():'—'}</span>
+            <span class="kv-label">Date</span><span class="kv-value">${fmtDate(enq.date)}</span>
+            <span class="kv-label">Follow-up</span><span class="kv-value">${fmtDate(enq.followup)}</span>
+            <span class="kv-label">SLA</span><span class="kv-value">${slaFor(enq)}</span>
+          </div>
+          ${enq.details?`<div style="margin-top:10px;padding:8px 10px;background:var(--navy3);border-radius:6px;font-size:11px;color:var(--text2);line-height:1.5">${enq.details}</div>`:''}
+        </div>
+      </div>
+      <div class="detail-card">
+        <div class="detail-card-head"><h4>Update Stage</h4></div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;padding:12px">
+          ${stages.map(s=>`<button class="btn sm ${s===enq.stage?'primary':''}" onclick="updateStage(${id},'${s}')">${s}</button>`).join('')}
+        </div>
+      </div>
+    </div>
+    <div class="detail-right">
+      <div class="detail-card">
+        <div class="detail-card-head"><h4>Client Overview</h4></div>
+        <div class="detail-card-body" style="font-size:12px;color:var(--text2)">
+          ${lead?`<div class="kv-grid">
+            <span class="kv-label">Contact</span><span class="kv-value">${lead.contact}</span>
+            <span class="kv-label">Email</span><span class="kv-value" style="color:var(--sky)">${lead.email}</span>
+            <span class="kv-label">Region</span><span class="kv-value">${lead.region}</span>
+            <span class="kv-label">Fleet</span><span class="kv-value">${lead.fleet}</span>
+          </div>
+          <button class="btn sm" style="margin-top:10px" onclick="openLeadDetail(${lead.id})">View full profile →</button>`:'No client linked'}
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+// ─── MODALS ────────────────────────────────────────────────────────────────────
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+function buildServicesCheck() {
+  const div = document.getElementById('services-check');
+  div.innerHTML = SERVICES.map(s=>`
+    <label style="display:flex;align-items:center;gap:5px;cursor:pointer;font-size:12px;color:var(--text2);text-transform:none;font-weight:400;letter-spacing:0">
+      <input type="checkbox" value="${s}" style="width:13px;height:13px;padding:0;border-radius:3px"> ${s}
+    </label>`).join('');
+}
+
+function openAddLead() {
+  buildServicesCheck();
+  document.getElementById('modal-lead-title').textContent = 'Add New Lead';
+  ['f-company','f-contact','f-email','f-phone','f-country','f-vessels','f-fleet','f-flag','f-notes'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('f-region').value='';
+  document.getElementById('f-status').value='lead';
+  document.getElementById('f-source').value='';
+  document.getElementById('modal-lead').dataset.editId='';
+  openModal('modal-lead');
+}
+
+function openEditLead(id) {
+  const l = db.leads.find(x=>x.id===id); if(!l) return;
+  buildServicesCheck();
+  document.getElementById('modal-lead-title').textContent = 'Edit Lead';
+  document.getElementById('f-company').value=l.company||'';
+  document.getElementById('f-contact').value=l.contact||'';
+  document.getElementById('f-email').value=l.email||'';
+  document.getElementById('f-phone').value=l.phone||'';
+  document.getElementById('f-country').value=l.country||'';
+  document.getElementById('f-region').value=l.region||'';
+  document.getElementById('f-vessels').value=l.vessels||'';
+  document.getElementById('f-fleet').value=l.fleet||'';
+  document.getElementById('f-flag').value=l.flag||'';
+  document.getElementById('f-status').value=l.status||'lead';
+  document.getElementById('f-source').value=l.source||'';
+  document.getElementById('f-notes').value=l.notes||'';
+  document.querySelectorAll('#services-check input').forEach(cb=>{ cb.checked=(l.services||[]).includes(cb.value); });
+  document.getElementById('modal-lead').dataset.editId=id;
+  openModal('modal-lead');
+}
+
+function saveLead() {
+  const company = document.getElementById('f-company').value.trim();
+  const contact = document.getElementById('f-contact').value.trim();
+  if(!company||!contact) { alert('Company and contact name are required.'); return; }
+  const services = [...document.querySelectorAll('#services-check input:checked')].map(cb=>cb.value);
+  const data = {
+    company, contact,
+    email: document.getElementById('f-email').value.trim(),
+    phone: document.getElementById('f-phone').value.trim(),
+    country: document.getElementById('f-country').value.trim(),
+    region: document.getElementById('f-region').value,
+    vessels: document.getElementById('f-vessels').value.trim(),
+    fleet: document.getElementById('f-fleet').value.trim(),
+    flag: document.getElementById('f-flag').value.trim(),
+    services,
+    status: document.getElementById('f-status').value,
+    source: document.getElementById('f-source').value,
+    notes: document.getElementById('f-notes').value.trim(),
+  };
+  const editId = document.getElementById('modal-lead').dataset.editId;
+  if(editId) {
+    const idx = db.leads.findIndex(l=>l.id==editId);
+    db.leads[idx] = {...db.leads[idx], ...data};
+    toast('Lead updated ✓');
+  } else {
+    data.id = db.nextId.lead++;
+    data.created = new Date().toISOString().split('T')[0];
+    db.leads.push(data);
+    toast('Lead added ✓');
+  }
+  save(); closeModal('modal-lead');
+  document.getElementById('lastSync').textContent = 'Last saved: ' + new Date().toLocaleTimeString();
+  render();
+}
+
+function openAddEnquiry(leadId) {
+  const sel = document.getElementById('eq-client');
+  sel.innerHTML = db.leads.map(l=>`<option value="${l.id}" ${l.id===leadId?'selected':''}>${l.company}</option>`).join('');
+  document.getElementById('eq-date').value = new Date().toISOString().split('T')[0];
+  ['eq-subject','eq-value','eq-details'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('eq-service').value='';
+  document.getElementById('eq-priority').value='normal';
+  document.getElementById('eq-stage').value='new';
+  document.getElementById('eq-followup').value='';
+  document.getElementById('modal-enq').dataset.editId='';
+  openModal('modal-enq');
+}
+
+function openEditEnq(id) {
+  const e = db.enquiries.find(x=>x.id===id); if(!e) return;
+  const sel = document.getElementById('eq-client');
+  sel.innerHTML = db.leads.map(l=>`<option value="${l.id}" ${l.id===e.leadId?'selected':''}>${l.company}</option>`).join('');
+  document.getElementById('eq-date').value = e.date||'';
+  document.getElementById('eq-subject').value = e.subject||'';
+  document.getElementById('eq-service').value = e.service||'';
+  document.getElementById('eq-priority').value = e.priority||'normal';
+  document.getElementById('eq-value').value = e.value||'';
+  document.getElementById('eq-stage').value = e.stage||'new';
+  document.getElementById('eq-details').value = e.details||'';
+  document.getElementById('eq-followup').value = e.followup||'';
+  document.getElementById('modal-enq').dataset.editId = id;
+  openModal('modal-enq');
+}
+
+function saveEnquiry() {
+  const leadId = parseInt(document.getElementById('eq-client').value);
+  const subject = document.getElementById('eq-subject').value.trim();
+  if(!subject) { alert('Subject is required.'); return; }
+  const data = {
+    leadId, subject,
+    service: document.getElementById('eq-service').value,
+    priority: document.getElementById('eq-priority').value,
+    value: parseFloat(document.getElementById('eq-value').value)||0,
+    stage: document.getElementById('eq-stage').value,
+    details: document.getElementById('eq-details').value.trim(),
+    date: document.getElementById('eq-date').value,
+    followup: document.getElementById('eq-followup').value,
+  };
+  const editId = document.getElementById('modal-enq').dataset.editId;
+  if(editId) {
+    const idx = db.enquiries.findIndex(e=>e.id==editId);
+    db.enquiries[idx] = {...db.enquiries[idx],...data};
+    toast('Enquiry updated ✓');
+  } else {
+    data.id = db.nextId.enq++;
+    data.created = new Date().toISOString().split('T')[0];
+    db.enquiries.push(data);
+    toast('Enquiry saved ✓');
+  }
+  save(); closeModal('modal-enq'); render();
+}
+
+function openAddNote(leadId) {
+  if(leadId===null&&selectedLeadId) leadId=selectedLeadId;
+  document.getElementById('modal-note').dataset.leadId = leadId||'';
+  document.getElementById('note-date').value = new Date().toISOString().split('T')[0];
+  ['note-text','note-action','note-followup'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('note-type').value='note';
+  openModal('modal-note');
+}
+
+function saveNote() {
+  const text = document.getElementById('note-text').value.trim();
+  if(!text) { alert('Note text is required.'); return; }
+  const leadId = parseInt(document.getElementById('modal-note').dataset.leadId);
+  const note = {
+    id: db.nextId.note++,
+    leadId,
+    type: document.getElementById('note-type').value,
+    date: document.getElementById('note-date').value,
+    text,
+    followup: document.getElementById('note-followup').value,
+    action: document.getElementById('note-action').value.trim(),
+    done: false,
+  };
+  db.notes.push(note);
+  save(); closeModal('modal-note'); toast('Note saved ✓'); render();
+}
+
+function toggleNote(id) {
+  const n = db.notes.find(x=>x.id===id);
+  if(n) { n.done = !n.done; save(); render(); }
+}
+
+function updateStage(enqId, stage) {
+  const e = db.enquiries.find(x=>x.id===enqId);
+  if(e) { e.stage=stage; save(); openEnqDetail(enqId); toast('Stage updated ✓'); }
+}
+function markWon(id) { updateStage(id,'won'); }
+function markLost(id) { updateStage(id,'lost'); }
+
+function openMailer() {
+  ['ml-subject','ml-body','ml-ref'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('ml-date').value = new Date().toISOString().split('T')[0];
+  document.getElementById('ml-audience').value='All Clients';
+  openModal('modal-mailer');
+}
+function prefillMailer(title) {
+  document.getElementById('ml-subject').value = title;
+  openModal('modal-mailer');
+}
+function saveMailer() {
+  const subject = document.getElementById('ml-subject').value.trim();
+  if(!subject) { alert('Subject required.'); return; }
+  const m = {
+    id: db.nextId.mailer++,
+    subject,
+    audience: document.getElementById('ml-audience').value,
+    date: document.getElementById('ml-date').value,
+    body: document.getElementById('ml-body').value,
+    ref: document.getElementById('ml-ref').value,
+    sent: 0, opened: 0,
+  };
+  db.mailers.push(m);
+  save(); closeModal('modal-mailer'); toast('Mailer scheduled ✓'); render();
+}
+
+// ─── CONTACTS ─────────────────────────────────────────────────────────────────
+function openAddContact(leadId) {
+  document.getElementById('modal-contact-title').textContent = 'Add Contact';
+  ['ct-name','ct-role','ct-email','ct-phone','ct-notes'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('ct-dept').value='';
+  document.getElementById('ct-primary').value='false';
+  document.getElementById('modal-contact').dataset.editId='';
+  document.getElementById('modal-contact').dataset.leadId=leadId;
+  openModal('modal-contact');
+}
+
+function openEditContact(id) {
+  const ct = db.contacts.find(x=>x.id===id); if(!ct) return;
+  document.getElementById('modal-contact-title').textContent = 'Edit Contact';
+  document.getElementById('ct-name').value = ct.name||'';
+  document.getElementById('ct-role').value = ct.role||'';
+  document.getElementById('ct-dept').value = ct.dept||'';
+  document.getElementById('ct-email').value = ct.email||'';
+  document.getElementById('ct-phone').value = ct.phone||'';
+  document.getElementById('ct-primary').value = ct.primary?'true':'false';
+  document.getElementById('ct-notes').value = ct.notes||'';
+  document.getElementById('modal-contact').dataset.editId = id;
+  document.getElementById('modal-contact').dataset.leadId = ct.leadId;
+  openModal('modal-contact');
+}
+
+function saveContact() {
+  const name = document.getElementById('ct-name').value.trim();
+  if(!name) { alert('Contact name is required.'); return; }
+  const leadId = parseInt(document.getElementById('modal-contact').dataset.leadId);
+  const isPrimary = document.getElementById('ct-primary').value === 'true';
+  const data = {
+    leadId, name,
+    role: document.getElementById('ct-role').value.trim(),
+    dept: document.getElementById('ct-dept').value,
+    email: document.getElementById('ct-email').value.trim(),
+    phone: document.getElementById('ct-phone').value.trim(),
+    primary: isPrimary,
+    notes: document.getElementById('ct-notes').value.trim(),
+  };
+  // if setting as primary, unset others for this company
+  if(isPrimary) db.contacts.filter(c=>c.leadId===leadId).forEach(c=>c.primary=false);
+  const editId = document.getElementById('modal-contact').dataset.editId;
+  if(editId) {
+    const idx = db.contacts.findIndex(c=>c.id==editId);
+    db.contacts[idx] = {...db.contacts[idx],...data};
+    toast('Contact updated ✓');
+  } else {
+    data.id = db.nextId.contact++;
+    db.contacts.push(data);
+    toast('Contact added ✓');
+  }
+  save(); closeModal('modal-contact'); openLeadDetail(leadId);
+}
+
+function deleteContact(id, leadId) {
+  if(!confirm('Remove this contact?')) return;
+  db.contacts = db.contacts.filter(c=>c.id!==id);
+  save(); toast('Contact removed'); openLeadDetail(leadId);
+}
+
+function globalSearch(q) {
+  if(!q) return;
+  const lq = q.toLowerCase();
+  // also match by contact person name/email
+  const contactMatches = db.contacts.filter(c=>c.name.toLowerCase().includes(lq)||c.email.toLowerCase().includes(lq));
+  const contactLeadIds = new Set(contactMatches.map(c=>c.leadId));
+  const matchLeads = db.leads.filter(l=>l.company.toLowerCase().includes(lq)||l.contact.toLowerCase().includes(lq)||l.email.toLowerCase().includes(lq)||contactLeadIds.has(l.id));
+  if(matchLeads.length) {
+    currentView='leads';
+    document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+    document.querySelector('[data-view=leads]').classList.add('active');
+    document.getElementById('main-content').innerHTML = renderLeads(lq);
+  }
+}
+
+// Close modals on background click
+document.querySelectorAll('.modal-bg').forEach(bg=>{
+  bg.addEventListener('click',e=>{ if(e.target===bg) bg.classList.remove('open'); });
+});
+
+// ─── AUTH ─────────────────────────────────────────────────────────────────────
+const USERS = {
+  'admin': '21knots2025',
+  'singapore': 'knots@sg',
+  'india': 'knots@in',
+  'uae': 'knots@ae',
+};
+
+// ─── OUTLOOK SYNC ENGINE ──────────────────────────────────────────────────────
+let syncedEmails = [];
+
+function openSyncPanel() {
+  const cfg = JSON.parse(localStorage.getItem('21k-cfg') || '{}');
+  if(cfg.client) document.getElementById('cfg-client').value = cfg.client;
+  if(cfg.tenant) document.getElementById('cfg-tenant').value = cfg.tenant;
+  if(cfg.apikey) document.getElementById('cfg-apikey').value = cfg.apikey;
+  document.getElementById('sync-setup').style.display = 'block';
+  document.getElementById('sync-review').style.display = 'none';
+  const st = document.getElementById('sync-status');
+  st.className = 'sync-status'; st.textContent = '';
+  openModal('modal-sync');
+}
+
+function setStatus(msg, type='info') {
+  const el = document.getElementById('sync-status');
+  el.textContent = msg; el.className = 'sync-status ' + type;
+}
+
+function saveConfigAndSync() {
+  const clientId = document.getElementById('cfg-client').value.trim();
+  const tenant = document.getElementById('cfg-tenant').value.trim();
+  const apiKey = document.getElementById('cfg-apikey').value.trim();
+  const count = parseInt(document.getElementById('cfg-count').value);
+  if(!clientId || !tenant || !apiKey) { setStatus('Please fill in all fields.', 'error'); return; }
+  localStorage.setItem('21k-cfg', JSON.stringify({client:clientId, tenant, apikey:apiKey, count}));
+
+  // Clear any stale session storage from previous MSAL attempts
+  Object.keys(sessionStorage).forEach(k => sessionStorage.removeItem(k));
+
+  const redirectUri = window.location.href.split('?')[0].split('#')[0];
+  const nonce = Math.random().toString(36).substring(2);
+  sessionStorage.setItem('sync-nonce', nonce);
+
+  const authUrl = 'https://login.microsoftonline.com/' + tenant + '/oauth2/v2.0/authorize'
+    + '?client_id=' + encodeURIComponent(clientId)
+    + '&response_type=token'
+    + '&redirect_uri=' + encodeURIComponent(redirectUri)
+    + '&scope=' + encodeURIComponent('https://graph.microsoft.com/Mail.Read https://graph.microsoft.com/User.Read')
+    + '&response_mode=fragment'
+    + '&nonce=' + nonce;
+
+  setStatus('Redirecting to Microsoft login...', 'info');
+  setTimeout(() => { window.location.href = authUrl; }, 600);
+}
+
+async function checkForToken() {
+  const hash = window.location.hash;
+  if(!hash || !hash.includes('access_token')) return false;
+
+  const params = new URLSearchParams(hash.substring(1));
+  const token = params.get('access_token');
+  if(!token) return false;
+
+  // Clean URL immediately
+  history.replaceState(null, '', window.location.pathname);
+
+  const cfg = JSON.parse(localStorage.getItem('21k-cfg') || '{}');
+  const apiKey = cfg.apikey;
+  const count = cfg.count || 50;
+
+  if(!apiKey) return false;
+
+  render();
+  openModal('modal-sync');
+  document.getElementById('sync-setup').style.display = 'block';
+  document.getElementById('sync-review').style.display = 'none';
+  setStatus('Signed in! Fetching your emails...', 'info');
+
+  try {
+    const graphRes = await fetch(
+      'https://graph.microsoft.com/v1.0/me/messages?$top=' + count + '&$orderby=receivedDateTime desc&$select=subject,from,receivedDateTime,bodyPreview',
+      { headers: { Authorization: 'Bearer ' + token } }
+    );
+    const graphData = await graphRes.json();
+    if(graphData.error) { setStatus('Microsoft error: ' + graphData.error.message, 'error'); return false; }
+    const emails = graphData.value || [];
+
+    setStatus('AI is reviewing ' + emails.length + ' emails — please wait...', 'info');
+
+    const emailList = emails.map(function(e,i) {
+      return '[' + i + '] From: ' + (e.from && e.from.emailAddress ? e.from.emailAddress.address : '') +
+        '\nSubject: ' + (e.subject||'') +
+        '\nPreview: ' + (e.bodyPreview||'').substring(0,200);
+    }).join('\n\n');
+
+    const prompt = 'You are a CRM assistant for 21 Knots, a marine and offshore engineering company. Review these ' + emails.length + ' emails. ENQUIRY = genuine business enquiry from external client about engineering services, design, offshore, inspections, surveys, quotations, tenders. IGNORE = newsletters, internal @21-knots.com emails, HR, invoices, spam, LinkedIn, Microsoft system emails. For each ENQUIRY extract: company (guess from domain if needed), service (Ship Design/Naval Architecture/Structural Design/Offshore Engineering/SubSea Engineering/Decommissioning/Renewable Energy/Inspection & Surveys/Transportation & Installation/Oil & Gas Engineering/Other), priority (urgent/high/normal), summary (one sentence). Respond ONLY with a JSON array, no markdown:\n[{"index":0,"decision":"ENQUIRY","company":"X","service":"Y","priority":"high","summary":"Z"},{"index":1,"decision":"IGNORE"}]\n\nEmails:\n' + emailList;
+
+    const aiRes = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 2000,
+        system: 'Respond with valid JSON only, no markdown, no explanation.',
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+    const aiData = await aiRes.json();
+    const text = (aiData.content||[]).map(function(b){return b.text||'';}).join('');
+    const clean = text.replace(/```json|```/g,'').trim();
+    const classifications = JSON.parse(clean);
+
+    syncedEmails = classifications
+      .filter(function(c){return c.decision==='ENQUIRY';})
+      .map(function(c){return Object.assign({}, c, {email: emails[c.index]});});
+
+    if(syncedEmails.length === 0) {
+      setStatus('No new enquiries found in your last ' + count + ' emails. Try increasing the count.', 'info');
+      return true;
+    }
+
+    document.getElementById('sync-setup').style.display = 'none';
+    document.getElementById('sync-review').style.display = 'block';
+    renderEmailReview();
+  } catch(err) {
+    setStatus('Error: ' + err.message, 'error');
+    console.error(err);
+  }
+  return true;
+}
+
+function renderEmailReview() {
+  const list = document.getElementById('sync-email-list');
+  list.innerHTML = syncedEmails.map(function(item,i) {
+    const e = item.email || {};
+    const from = (e.from && e.from.emailAddress) ? (e.from.emailAddress.name || e.from.emailAddress.address || 'Unknown') : 'Unknown';
+    const addr = (e.from && e.from.emailAddress) ? (e.from.emailAddress.address || '') : '';
+    const time = e.receivedDateTime ? new Date(e.receivedDateTime).toLocaleDateString('en-GB',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'}) : '';
+    return '<div class="email-review-item">'
+      + '<div class="email-review-check checked" id="chk-' + i + '" onclick="toggleCheck(' + i + ')">✓</div>'
+      + '<div class="email-review-info">'
+      + '<div class="email-review-from">' + from + ' &lt;' + addr + '&gt;</div>'
+      + '<div class="email-review-subject">' + (e.subject||'(no subject)') + '</div>'
+      + '<div class="email-review-ai">AI: ' + (item.service||'') + ' &middot; ' + (item.priority||'') + ' priority &middot; ' + (item.summary||'') + '</div>'
+      + '</div>'
+      + '<div class="email-review-time">' + time + '</div>'
+      + '</div>';
+  }).join('');
+  document.getElementById('sync-count-label').textContent = syncedEmails.length + ' enquiries found';
+}
+
+function toggleCheck(i) {
+  const el = document.getElementById('chk-'+i);
+  const isChecked = el.classList.contains('checked');
+  el.classList.toggle('checked', !isChecked);
+  el.textContent = !isChecked ? '✓' : '';
+}
+
+function importSelected() {
+  let imported = 0;
+  syncedEmails.forEach(function(item,i) {
+    const el = document.getElementById('chk-'+i);
+    if(!el || !el.classList.contains('checked')) return;
+    const e = item.email || {};
+    const fromAddr = (e.from && e.from.emailAddress) ? (e.from.emailAddress.address||'') : '';
+    const fromName = (e.from && e.from.emailAddress) ? (e.from.emailAddress.name||fromAddr) : fromAddr;
+    const domain = fromAddr.split('@')[1] || '';
+    const company = item.company || domain.split('.')[0] || 'Unknown';
+    let lead = db.leads.find(function(l){return l.email===fromAddr || l.company.toLowerCase()===company.toLowerCase();});
+    if(!lead) {
+      lead = { id: db.nextId.lead++, company: item.company||company, contact: fromName, email: fromAddr,
+        phone:'', country:'', region:'', vessels:'', fleet:'', flag:'', services:[item.service||'Other / Multiple Services'],
+        status:'lead', source:'Email Enquiry', notes:'', created: new Date().toISOString().split('T')[0] };
+      db.leads.push(lead);
+      db.contacts.push({ id: db.nextId.contact++, leadId: lead.id, name: fromName, role:'', dept:'',
+        email: fromAddr, phone:'', primary: true, notes:'' });
+    }
+    db.enquiries.push({ id: db.nextId.enq++, leadId: lead.id, subject: e.subject||'Email enquiry',
+      service: item.service||'Other / Multiple Services', priority: item.priority||'normal',
+      value: 0, stage:'new', details: e.bodyPreview||'',
+      date: new Date().toISOString().split('T')[0], followup:'', created: new Date().toISOString().split('T')[0] });
+    imported++;
+  });
+  save();
+  toast(imported + ' enquiries imported');
+  closeModal('modal-sync');
+  setView('enquiries', document.querySelector('[data-view=enquiries]'));
+}
+
+function resetSync() {
+  document.getElementById('sync-setup').style.display = 'block';
+  document.getElementById('sync-review').style.display = 'none';
+  const st = document.getElementById('sync-status');
+  st.className = 'sync-status'; st.textContent = '';
+}
+// ─── OUTLOOK SYNC ENGINE END ───────────────────────────────────────────────────
+
+// ─── INIT ─────────────────────────────────────────────────────────────────────
+render();
+updateBadges();
+document.getElementById('lastSync').textContent = 'Ready';
+document.getElementById('syncBtn').addEventListener('click', function(){ openSyncPanel(); });
+if(window.location.hash && window.location.hash.includes('access_token')) {
+  checkForToken();
+}
+</script>
+</body>
+</html>
